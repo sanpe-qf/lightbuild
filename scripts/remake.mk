@@ -7,12 +7,12 @@ submk := $(obj)
 _build:
 
 #
-# Read auto.conf if it exists, otherwise ignore
--include $(MAKE_HOME)/config/auto.conf
-
-#
 # Include Buildsystem function
 include $(BUILD_HOME)/define.mk
+
+#
+# Read auto.conf if it exists, otherwise ignore
+-include $(MAKE_HOME)/include/config/auto.conf
 
 #
 # Include sub makefile
@@ -27,7 +27,8 @@ include $(sub-file)
 project		:= $(project-y)
 project		:= $(sort $(project))
 project		:= $(filter %/, $(project))
-project		:= $(subst /,, $(project))
+project		:= $(foreach s,$(project),$(s)_remake_)
+project		:= $(subst /_remake_,,$(project))
 project		:= $(addprefix $(obj)/,$(project))
 
 ########################################
@@ -48,11 +49,11 @@ PHONY += $(clean-dirs) clean
 
 RCS_FIND_IGNORE := \( -name SCCS -o -name BitKeeper -o \
                       -name .svn -o -name CVS -o -name .pc -o \
-					  -name .hg -o -name .git \) -prune -o
+                      -name .hg -o -name .git \) -prune -o
 
 _clean: $(project) 
 	$(Q)$(MAKE) $(clean)=$(sub-dir)
-		
+
 #
 # mrproper
 PHONY += distclean
@@ -60,8 +61,8 @@ PHONY += distclean
 MRPROPER_DIRS  += include/config include/generated
 MRPROPER_FILES += .config .config.old tags TAGS cscope* GPATH GTAGS GRTAGS GSYMS
 
-mrproper: rm-dirs  := $(wildcard $(MRPROPER_DIRS))
-mrproper: rm-files := $(wildcard $(MRPROPER_FILES))
+_mrproper: rm-dirs  := $(wildcard $(MRPROPER_DIRS))
+_mrproper: rm-files := $(wildcard $(MRPROPER_FILES))
 mrproper-dirs      := $(addprefix _mrproper_, scripts)
 
 PHONY += $(mrproper-dirs) mrproper

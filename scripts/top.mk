@@ -8,7 +8,8 @@
 ########################################
 
 all: build
-
+	$(call hook)
+	
 ########################################
 # Start path                           #
 ########################################
@@ -27,13 +28,11 @@ objtree		:= .
 
 #
 # Kconfig path config
-ifdef KBUILD_KCONFIG
-Kconfig := $(KBUILD_KCONFIG)
-else
-KBUILD_KCONFIG := $(MAKE_HOME)/Kconfig
+ifndef Kconfig
+Kconfig := $(MAKE_HOME)/Kconfig
 endif
 
-export MAKE_HOME BUILD_HOME objtree KBUILD_KCONFIG
+export MAKE_HOME BUILD_HOME objtree Kconfig
 
 ########################################
 # Start env                            #
@@ -84,25 +83,11 @@ include $(BUILD_HOME)/build_warn.mk
 
 #
 # Read auto.conf if it exists, otherwise ignore
-sinclude $(MAKE_HOME)/include/config/auto.conf
+-include $(MAKE_HOME)/include/config/auto.conf
 
 #
 # Tool Define  
 include $(BUILD_HOME)/define.mk
-
-########################################
-# Start project                        #
-########################################
-
-ifndef project-y
-project		:= $(MAKE_HOME)
-else
-project		:= $(project-y)
-project		:= $(sort $(project))
-project		:= $(filter %/, $(project))
-project		:= $(subst /,, $(project))
-project		:= $(addprefix $(MAKE_HOME)/,$(project))
-endif
 
 ########################################
 # Start scripts                        #
@@ -112,15 +97,6 @@ endif
 PHONY += scripts_basic
 scripts_basic:
 	$(Q)$(MAKE) $(build)=$(BUILD_HOME)/basic
-
-# outputmakefile generates a Makefile in the output directory, if using a
-# separate output directory. This allows convenient use of make in the
-# output directory.
-PHONY += outputmakefile
-outputmakefile:
-	$(Q)ln -fsn $(MAKE_HOME) source
-	$(Q)$(SHELL) $(MAKE_HOME)/scripts/mkmakefile \
-	    $(MAKE_HOME) $(MAKE_HOME) $(VERSION) $(PATCHLEVEL)
 
 ########################################
 # Start config                         #
@@ -135,14 +111,18 @@ config_dir := $(addprefix $(MAKE_HOME)/,$(config_dir))
 config: scripts_basic FORCE
 	$(Q)$(MKDIR) $(config_dir)
 	$(Q)$(MAKE) $(build)=$(BUILD_HOME)/kconfig $@
+	$(Q)$(MAKE) $(build)=$(BUILD_HOME)/kconfig syncconfig
 
-menuconfig:
+menuconfig: FORCE
 	$(Q)$(MKDIR) $(config_dir)
 	$(Q)$(MAKE) $(build)=$(BUILD_HOME)/newconfig $@
+	$(Q)$(MAKE) $(build)=$(BUILD_HOME)/kconfig syncconfig
+
 
 %config: scripts_basic FORCE
 	$(Q)$(MKDIR) $(config_dir)
 	$(Q)$(MAKE) $(build)=$(BUILD_HOME)/kconfig $@
+	$(Q)$(MAKE) $(build)=$(BUILD_HOME)/kconfig syncconfig
 
 ########################################
 # Start checkstack                     #
@@ -217,7 +197,7 @@ help:
 # Start remake                         #
 ########################################
 
-remake_fun += build clean
+remake_fun += build clean mrproper distclean
 
 PHONY += $(remake_fun) remake
 

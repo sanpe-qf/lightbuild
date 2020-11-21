@@ -1,3 +1,3 @@
-exe	:= hello
+elf	:= hello
 obj-y	+= main.o
-always-y += $(obj-y)
+always-y += hello

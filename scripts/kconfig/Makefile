@@ -12,12 +12,6 @@ PHONY += xconfig gconfig menuconfig config localmodconfig localyesconfig \
 #  Set SRCARCH to .. fake this Makefile.
 SRCARCH := ..
 
-ifdef KBUILD_KCONFIG
-Kconfig := $(KBUILD_KCONFIG)
-else
-Kconfig := Kconfig
-endif
-
 ifeq ($(quiet),silent_)
 silent := -s
 endif
@@ -169,7 +163,7 @@ help:
 
 conf-objs	:= conf.o  zconf.tab.o
 
-hostprogs-y := conf
+hostprogs := conf
 
 targets		+= zconf.lex.c
 
@@ -178,7 +172,7 @@ HOSTCFLAGS_zconf.lex.o	:= -I$(src)
 HOSTCFLAGS_zconf.tab.o	:= -I$(src)
 
 # nconf: Used for the nconfig target based on ncurses
-hostprogs-y	+= nconf
+hostprogs	+= nconf
 nconf-objs	:= nconf.o zconf.tab.o nconf.gui.o
 
 HOSTLDLIBS_nconf	= $(shell . $(obj)/.nconf-cfg && echo $$libs)
@@ -188,7 +182,7 @@ HOSTCFLAGS_nconf.gui.o	= $(shell . $(obj)/.nconf-cfg && echo $$cflags)
 $(obj)/nconf.o $(obj)/nconf.gui.o: $(obj)/.nconf-cfg
 
 # mconf: Used for the menuconfig target based on lxdialog
-hostprogs-y	+= mconf
+hostprogs	+= mconf
 lxdialog	:= checklist.o inputbox.o menubox.o textbox.o util.o yesno.o
 mconf-objs	:= mconf.o zconf.tab.o $(addprefix lxdialog/, $(lxdialog))
 
@@ -200,7 +194,7 @@ $(obj)/mconf.o: $(obj)/.mconf-cfg
 $(addprefix $(obj)/lxdialog/, $(lxdialog)): $(obj)/.mconf-cfg
 
 # qconf: Used for the xconfig target based on Qt
-hostprogs-y	+= qconf
+hostprogs	+= qconf
 qconf-cxxobjs	:= qconf.o
 qconf-objs	:= zconf.tab.o
 
@@ -216,7 +210,7 @@ $(obj)/%.moc: $(src)/%.h $(obj)/.qconf-cfg
 	$(call cmd,moc)
 
 # gconf: Used for the gconfig target based on GTK+
-hostprogs-y	+= gconf
+hostprogs	+= gconf
 gconf-objs	:= gconf.o zconf.tab.o
 
 HOSTLDLIBS_gconf = $(shell . $(obj)/.gconf-cfg && echo $$libs)

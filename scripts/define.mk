@@ -18,11 +18,18 @@ NM			:= $(CROSS_COMPILE)nm
 STRIP		:= $(CROSS_COMPILE)strip
 OBJCOPY		:= $(CROSS_COMPILE)objcopy
 OBJDUMP		:= $(CROSS_COMPILE)objdump
+NASM		:= nasm
 
-AS_FLAGS 	:= 
-LD_FLAGS 	:= 
-CC_FLAGS 	:= 
-CPP_FLAGS 	:= 
+AS_FLAGS 		:= 
+LD_FLAGS 		:= 
+CC_FLAGS 		:= 
+CPP_FLAGS 		:= 
+AR_FLAGS 		:= 
+NM_FLAGS 		:= 
+STRIP_FLAGS 	:= 
+OBJCOPY_FLAGS	:= 
+OBJDUMP_FLAGS	:= 
+NASM_FLAGS		:=
 
 #
 # Host toolchain
@@ -57,6 +64,7 @@ ECHO_CXX		:= \e[32mCXX\e[0m
 ECHO_AS			:= \e[32mAS\e[0m
 ECHO_AR			:= \e[32mAR\e[0m
 ECHO_LD			:= \e[35mLD\e[0m
+ECHO_NASM		:= \e[35mNASM\e[0m
 
 ECHO_HOSTCC		:= \e[32mHOSTCC\e[0m
 ECHO_HOSTCXX	:= \e[32mHOSTCXX\e[0m

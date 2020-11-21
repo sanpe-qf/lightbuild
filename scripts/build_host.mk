@@ -18,15 +18,15 @@ host-cxxshlib := $(sort $(hostcxxlibs-y) $(hostcxxlibs-m))
 # C code
 # Executables compiled from a single .c file
 host-csingle	:= $(foreach m,$(hostprogs), \
-			$(if $($(m)-objs)$($(m)-cxxobjs)$($(m)-sharedobjs),,$(m)))
+			        $(if $($(m)-objs)$($(m)-cxxobjs)$($(m)-sharedobjs),,$(m)))
 
 # C executables linked based on several .o files
-host-cmulti	:= $(foreach m,$(hostprogs),\
-		   $(if $($(m)-cxxobjs),,$(if $($(m)-objs),$(m))))
+host-cmulti	:= $(foreach m,$(hostprogs), \
+		       $(if $($(m)-cxxobjs),,$(if $($(m)-objs),$(m))))
 
 # Shared object libraries
 host-shared	:= $(foreach m,$(hostprogs),\
-		   $(if $($(m)-sharedobjs),$(m))))
+		   	   $(if $($(m)-sharedobjs),$(m)))
 
 # Object (.o) files compiled from .c files
 host-cobjs	:= $(sort $(foreach m,$(hostprogs),$($(m)-objs)))
@@ -59,7 +59,7 @@ host-cshobjs	:= $(addprefix $(obj)/,$(host-cshobjs))
 host-cxxshobjs	:= $(addprefix $(obj)/,$(host-cxxshobjs))
 
 ########################################
-# CC options                           #
+# HOSTCC options                       #
 ########################################
 
 #

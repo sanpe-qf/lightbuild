@@ -8,6 +8,14 @@ PHONY := _build
 _build:
 
 #
+# Include Buildsystem function
+include $(BUILD_HOME)/define.mk
+
+#
+# Include Build function
+include $(BUILD_HOME)/build_def.mk
+
+#
 # Read auto.conf if it exists, otherwise ignore
 -include $(MAKE_HOME)/config/auto.conf
 
@@ -16,14 +24,6 @@ _build:
 build-dir := $(if $(filter /%,$(src)),$(src),$(MAKE_HOME)/$(src))
 build-file := $(if $(wildcard $(build-dir)/Kbuild),$(build-dir)/Kbuild,$(build-dir)/Makefile)
 include $(build-file)
-
-#
-# Include Buildsystem function
-include $(BUILD_HOME)/define.mk
-
-#
-# Include Build function
-include $(BUILD_HOME)/build_def.mk
 
 ########################################
 # Old compatible                       #
@@ -38,9 +38,9 @@ endif
 
 #
 # exe-y -> exe
-ifneq ($(exe-y),)
-$(warning 'exe-y' is deprecated. Please use 'exe' instead)
-exe  += $(exe-y)
+ifneq ($(elf-y),)
+$(warning 'elf-y' is deprecated. Please use 'elf' instead)
+elf  += $(elf-y)
 endif
 
 #
@@ -104,9 +104,29 @@ include $(BUILD_HOME)/build_obj.mk
 ########################################
 
 #
-# obj *.o -> exe
-ifneq ($(exe-y),)
-include $(BUILD_HOME)/build_obj.m
+# obj *.o -> elf
+ifneq ($(elf),)
+include $(BUILD_HOME)/build_elf.mk
+endif
+
+########################################
+# Bin Module                           #
+########################################
+
+#
+# Custom rules -> Binary
+ifneq ($(bin),)
+include $(BUILD_HOME)/build_bin.mk
+endif
+
+########################################
+# Nasm Module                          #
+########################################
+
+#
+# nasm -> rules
+ifneq ($(nasm),)
+include $(BUILD_HOME)/build_nasm.mk
 endif
 
 ########################################

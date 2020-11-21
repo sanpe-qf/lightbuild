@@ -1,1 +1,2 @@
-project-y += hello/ 
+project-y += hello/ lib/
+INCLUDE += include/
