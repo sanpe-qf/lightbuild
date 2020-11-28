@@ -32,6 +32,13 @@ project		:= $(subst /_remake_,,$(project))
 project		:= $(addprefix $(obj)/,$(project))
 
 ########################################
+# Start include                        #
+########################################
+
+INCLUDE		+= $(addprefix $(obj)/,$(include-y))
+export INCLUDE
+
+########################################
 # Start build                          #
 ########################################
 

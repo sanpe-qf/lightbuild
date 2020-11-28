@@ -8,7 +8,7 @@
 ########################################
 
 #
-# Project toolchain
+# Gcc toolchain
 AS			:= $(CROSS_COMPILE)as
 LD			:= $(CROSS_COMPILE)ld
 CC			:= $(CROSS_COMPILE)gcc
@@ -18,7 +18,21 @@ NM			:= $(CROSS_COMPILE)nm
 STRIP		:= $(CROSS_COMPILE)strip
 OBJCOPY		:= $(CROSS_COMPILE)objcopy
 OBJDUMP		:= $(CROSS_COMPILE)objdump
+
+#
+# clang toolchain
+
+
+
+#
+# NASM toolchain
 NASM		:= nasm
+
+
+#
+# Rust toolchain
+
+
 
 AS_FLAGS 		:= 
 LD_FLAGS 		:= 
@@ -39,7 +53,7 @@ HOSTCFLAGS   := -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-
 HOSTCXXFLAGS := -O2
 
 ########################################
-# CMD tool define                      #
+# CMD tool                             #
 ########################################
 
 #
@@ -57,14 +71,20 @@ CONFIG_SHELL	:= $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 	  else if [ -x /bin/bash ]; then echo /bin/bash; \
 	  else echo sh; fi ; fi)
 
-#
-# CMD tool tips
+########################################
+# Echo tips                            #
+########################################
+
+ECHO_CPP		:= \e[32mCPP\e[0m
 ECHO_CC			:= \e[32mCC\e[0m
 ECHO_CXX		:= \e[32mCXX\e[0m
 ECHO_AS			:= \e[32mAS\e[0m
 ECHO_AR			:= \e[32mAR\e[0m
 ECHO_LD			:= \e[35mLD\e[0m
+
 ECHO_NASM		:= \e[35mNASM\e[0m
+
+ECHO_BIN		:= \e[35mBIN\e[0m
 
 ECHO_HOSTCC		:= \e[32mHOSTCC\e[0m
 ECHO_HOSTCXX	:= \e[32mHOSTCXX\e[0m

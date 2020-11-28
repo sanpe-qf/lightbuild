@@ -10,25 +10,14 @@
 #
 # Sort file
 extra-y			:= $(sort $(extra-y))
-targets			:= $(sort $(targets))
 obj-y			:= $(sort $(obj-y))
 lib-y			:= $(sort $(lib-y))
-subdir-obj-y	:= $(sort $(subdir-obj-y))
-real-objs-y		:= $(sort $(real-objs-y))
-obj-dirs		:= $(sort $(obj-dirs))
-subdir			:= $(sort $(subdir))
 
 #
 # Add file
 extra-y			:= $(addprefix $(obj)/,$(extra-y))
-targets			:= $(addprefix $(obj)/,$(targets))
 obj-y			:= $(addprefix $(obj)/,$(obj-y))
 lib-y			:= $(addprefix $(obj)/,$(lib-y))
-subdir-obj-y	:= $(addprefix $(obj)/,$(subdir-obj-y))
-real-objs-y		:= $(addprefix $(obj)/,$(real-objs-y))
-subdir-ym		:= $(addprefix $(obj)/,$(subdir-ym))
-obj-dirs		:= $(addprefix $(obj)/,$(obj-dirs))
-subdir			:= $(addprefix $(obj)/,$(subdir-ym))
 
 ########################################
 # OBJ options                          #
@@ -36,36 +25,22 @@ subdir			:= $(addprefix $(obj)/,$(subdir-ym))
 
 orig_c_flags   = $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS) $(KBUILD_SUBDIR_CCFLAGS) \
                  $(ccflags-y) $(CFLAGS_$(basetarget).o)
+
+
 _c_flags       = $(filter-out $(CFLAGS_REMOVE_$(basetarget).o), $(orig_c_flags))
 _a_flags       = $(KBUILD_CPPFLAGS) $(KBUILD_AFLAGS) $(KBUILD_SUBDIR_ASFLAGS) \
                  $(asflags-y) $(AFLAGS_$(basetarget).o)
 _cpp_flags     = $(KBUILD_CPPFLAGS) $(cppflags-y) $(CPPFLAGS_$(@F))
 
-# If building the kernel in a separate objtree expand all occurrences
-# of -Idir to -I$(srctree)/dir except for absolute paths (starting with '/').
 
-ifeq ($(KBUILD_SRC),)
-__c_flags	= $(_c_flags)
-__a_flags	= $(_a_flags)
-__cpp_flags	= $(_cpp_flags)
-else
-# -I$(obj) locates generated .h files
-# $(call addtree,-I$(obj)) locates .h files in srctree, from generated .c files
-#   and locates generated .h files
-# FIXME: Replace both with specific CFLAGS* statements in the makefiles
-__c_flags	= $(call addtree,-I$(obj)) $(call flags,_c_flags)
-__a_flags	= $(call flags,_a_flags)
-__cpp_flags	= $(call flags,_cpp_flags)
-endif
+c_flags		= -Wp,-MD,$(depfile) $(NOSTDINC_FLAGS) -I $(INCLUDE)     \
+		 	$(_c_flags) $(modkern_cflags)
 
-c_flags		= -Wp,-MD,$(depfile) $(NOSTDINC_FLAGS) $(INCLUDE)     \
-		 	$(__c_flags) $(modkern_cflags)
+a_flags		= -Wp,-MD,$(depfile) $(NOSTDINC_FLAGS) -I $(INCLUDE)     \
+		 	$(_a_flags) $(modkern_aflags)
 
-a_flags		= -Wp,-MD,$(depfile) $(NOSTDINC_FLAGS) $(INCLUDE)     \
-		 	$(__a_flags) $(modkern_aflags)
-
-cpp_flags	= -Wp,-MD,$(depfile) $(NOSTDINC_FLAGS) $(INCLUDE)     \
-		 	$(__cpp_flags)
+cpp_flags	= -Wp,-MD,$(depfile) $(NOSTDINC_FLAGS) -I $(INCLUDE)     \
+		 	$(_cpp_flags)
 
 ld_flags	= $(LDFLAGS) $(ldflags-y)
 
@@ -86,7 +61,6 @@ quiet_cmd_cc_s_c = $(ECHO_CC) $(quiet_modtag)  $@
 
 $(obj)/%.s: $(src)/%.c FORCE
 	$(call if_changed_dep,cc_s_c)
-
 quiet_cmd_cc_i_c = $(ECHO_CPP) $(quiet_modtag) $@
 	  cmd_cc_i_c = $(CPP) $(c_flags)   -o $@ $<
 
@@ -131,14 +105,14 @@ quiet_cmd_as_s_S	= $(ECHO_CPP) $(quiet_modtag) $@
 $(obj)/%.s: $(src)/%.S FORCE
 	$(call if_changed_dep,as_s_S)
 
-quiet_cmd_as_o_S = AS $(quiet_modtag)  $@
+quiet_cmd_as_o_S = $(ECHO_AS) $(quiet_modtag)  $@
 cmd_as_o_S       = $(CC) $(a_flags) -c -o $@ $<
 
 $(obj)/%.o: $(src)/%.S FORCE
 	$(call if_changed_dep,as_o_S)
 
 targets += $(real-objs-y) $(lib-y)
-targets += $(extra-y) $(MAKECMDGOALS) $(always)
+targets += $(extra-y) $(MAKECMDGOALS)
 
 # Linker scripts preprocessor (.lds.S -> .lds)
 # ---------------------------------------------------------------------------
@@ -157,10 +131,9 @@ $(sort $(subdir-obj-y)): $(subdir-ym) ;
 
 #
 # Rule to compile a set of .o files into one .o file
-ifdef builtin-target
+
 quiet_cmd_link_o_target = LD $@
-# If the list of objects to link is empty, just create an empty built-in.o
-cmd_link_o_target = $(if $(strip $(obj-y)),\
+	  cmd_link_o_target = $(if $(strip $(obj-y)),\
 		      $(LD) $(ld_flags) -r -o $@ $(filter $(obj-y), $^), \
 		      rm -f $@; $(AR) rcs$(KBUILD_ARFLAGS) $@)
 
@@ -168,7 +141,6 @@ $(builtin-target): $(obj-y) FORCE
 	$(call if_changed,link_o_target)
 
 targets += $(builtin-target)
-endif # builtin-target
 
 #
 # Rule to compile a set of .o files into one .a file

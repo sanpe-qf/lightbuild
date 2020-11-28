@@ -1,2 +1,1 @@
-project-y += hello/ lib/
-INCLUDE += include/
+project-y += recursion/ 

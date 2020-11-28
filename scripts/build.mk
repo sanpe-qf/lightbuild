@@ -8,12 +8,12 @@ PHONY := _build
 _build:
 
 #
-# Include Buildsystem function
-include $(BUILD_HOME)/define.mk
-
-#
 # Include Build function
 include $(BUILD_HOME)/build_def.mk
+
+#
+# Include Buildsystem function
+include $(BUILD_HOME)/define.mk
 
 #
 # Read auto.conf if it exists, otherwise ignore
@@ -63,6 +63,8 @@ always-y 	+= $(hostprogs-always-y) $(hostprogs-always-m)
 
 always-y	:= $(addprefix $(obj)/,$(always-y))
 
+targets 	+= $(always-y)
+
 ########################################
 # filter subdir                        #
 ########################################
@@ -110,6 +112,16 @@ include $(BUILD_HOME)/build_elf.mk
 endif
 
 ########################################
+# Cust Module                          #
+########################################
+
+#
+# Custom rules -> elf
+ifneq ($(cust),)
+include $(BUILD_HOME)/build_cust.mk
+endif
+
+########################################
 # Bin Module                           #
 ########################################
 
@@ -133,7 +145,7 @@ endif
 # Host Module                          #
 ########################################
 
-ifneq ($(hostprogs) $(always),)
+ifneq ($(hostprogs) $(always-y),)
 include $(BUILD_HOME)/build_host.mk
 endif
 

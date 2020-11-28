@@ -1,5 +1,5 @@
 deps_config := \
-	/disk/d/code/product/light-build/Kconfig
+	/run/media/sanpe/file/light-build/Kconfig
 
 include/config/auto.conf: \
 	$(deps_config)
