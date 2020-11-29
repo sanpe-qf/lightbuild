@@ -1,1 +1,0 @@
-cmd_/run/media/sanpe/file/light-build/scripts/kconfig/conf := gcc  -o /run/media/sanpe/file/light-build/scripts/kconfig/conf /run/media/sanpe/file/light-build/scripts/kconfig/conf.o /run/media/sanpe/file/light-build/scripts/kconfig/zconf.tab.o  

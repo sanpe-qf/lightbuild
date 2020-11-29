@@ -10,18 +10,22 @@
 #
 # Sort file
 extra-y			:= $(sort $(extra-y))
-obj-y			:= $(sort $(obj-y))
 lib-y			:= $(sort $(lib-y))
 
 #
 # Add file
 extra-y			:= $(addprefix $(obj)/,$(extra-y))
-obj-y			:= $(addprefix $(obj)/,$(obj-y))
 lib-y			:= $(addprefix $(obj)/,$(lib-y))
 
 ########################################
 # OBJ options                          #
 ########################################
+
+# Backward compatibility
+asflags-y  += $(EXTRA_AFLAGS)
+ccflags-y  += $(EXTRA_CFLAGS)
+cppflags-y += $(EXTRA_CPPFLAGS)
+ldflags-y  += $(EXTRA_LDFLAGS)
 
 orig_c_flags   = $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS) $(KBUILD_SUBDIR_CCFLAGS) \
                  $(ccflags-y) $(CFLAGS_$(basetarget).o)
@@ -128,28 +132,3 @@ $(obj)/%.lds: $(src)/%.lds.S FORCE
 
 # To build objects in subdirs, we need to descend into the directories
 $(sort $(subdir-obj-y)): $(subdir-ym) ;
-
-#
-# Rule to compile a set of .o files into one .o file
-
-quiet_cmd_link_o_target = LD $@
-	  cmd_link_o_target = $(if $(strip $(obj-y)),\
-		      $(LD) $(ld_flags) -r -o $@ $(filter $(obj-y), $^), \
-		      rm -f $@; $(AR) rcs$(KBUILD_ARFLAGS) $@)
-
-$(builtin-target): $(obj-y) FORCE
-	$(call if_changed,link_o_target)
-
-targets += $(builtin-target)
-
-#
-# Rule to compile a set of .o files into one .a file
-ifdef lib-target
-quiet_cmd_link_l_target = AR	$@
-	  cmd_link_l_target = rm -f $@; $(AR) rcs$(KBUILD_ARFLAGS) $@ $(lib-y)
-
-$(lib-target): $(lib-y) FORCE
-	$(call if_changed,link_l_target)
-
-targets += $(lib-target)
-endif

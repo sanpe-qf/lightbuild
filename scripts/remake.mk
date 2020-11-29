@@ -25,11 +25,13 @@ include $(sub-file)
 ########################################
 
 project		:= $(project-y)
-project		:= $(sort $(project))
+project		:= $(strip $(sort $(project)))
 project		:= $(filter %/, $(project))
 project		:= $(foreach s,$(project),$(s)_remake_)
 project		:= $(subst /_remake_,,$(project))
 project		:= $(addprefix $(obj)/,$(project))
+
+project		:= $(addprefix $(obj)/,$(subst /_remake_,,$(foreach s,$(strip $(sort $(project-y))),$(s)_remake_)))
 
 ########################################
 # Start include                        #
@@ -91,15 +93,6 @@ _distclean: $(project) mrproper
 		-o -name '.*.rej' -o -size 0 \
 		-o -name '*%' -o -name '.*.cmd' -o -name 'core' \) \
 		-type f -print | xargs rm -f
-
-########################################
-# Self operation                       #
-########################################
-
-build-dirs	:= $(addprefix _build_, $(project))
-$(build-dirs):
-	echo $(patsubst _build_%,%,$@)
-	# $(Q)$(MAKE) $(remake)=$(patsubst _build_%,%,$@)
 
 ########################################
 # Descending operation                 #

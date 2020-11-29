@@ -54,15 +54,43 @@ endif
 # Always build                        #
 ########################################
 
+
+# elf-always-y += foo
+# ... is a shorthand for
+# elf += foo
+# always-y  += foo
+elf 		+= $(elf-always-y)
+always-y 	+= $(elf-always-y)
+
+# lib-always-y += foo
+# ... is a shorthand for
+# lib += foo
+# always-y  += foo
+lib 		+= $(lib-always-y)
+always-y 	+= $(lib-always-y)
+
+# bin-always-y += foo
+# ... is a shorthand for
+# bin += foo
+# always-y  += foo
+bin 		+= $(bin-always-y)
+always-y 	+= $(bin-always-y)
+
+# cust-always-y += foo
+# ... is a shorthand for
+# cust += foo
+# always-y  += foo
+cust 		+= $(cust-always-y)
+always-y 	+= $(cust-always-y)
+
 # hostprogs-always-y += foo
 # ... is a shorthand for
 # hostprogs += foo
 # always-y  += foo
-hostprogs 	+= $(hostprogs-always-y) $(hostprogs-always-m)
-always-y 	+= $(hostprogs-always-y) $(hostprogs-always-m)
+hostprogs 	+= $(hostprogs-always-y)
+always-y 	+= $(hostprogs-always-y)
 
 always-y	:= $(addprefix $(obj)/,$(always-y))
-
 targets 	+= $(always-y)
 
 ########################################
@@ -72,11 +100,6 @@ targets 	+= $(always-y)
 subdir-y	:= $(patsubst %/,%,$(filter %/, $(obj-y)))
 subdir-y	:= $(sort $(subdir-y))
 
-# Backward compatibility
-asflags-y  += $(EXTRA_AFLAGS)
-ccflags-y  += $(EXTRA_CFLAGS)
-cppflags-y += $(EXTRA_CPPFLAGS)
-ldflags-y  += $(EXTRA_LDFLAGS)
 
 # Libraries are always collected in one lib file.
 # Filter out objects already built-in
@@ -99,6 +122,8 @@ real-objs-y := $(foreach m, $(filter-out $(subdir-obj-y), $(obj-y)), $(if $(stri
 # OBJ Module                           #
 ########################################
 
+#
+# Passive rule
 include $(BUILD_HOME)/build_obj.mk
 
 ########################################
@@ -106,48 +131,48 @@ include $(BUILD_HOME)/build_obj.mk
 ########################################
 
 #
-# obj *.o -> elf
-ifneq ($(elf),)
+# Passive rule: object to elf
 include $(BUILD_HOME)/build_elf.mk
-endif
 
 ########################################
-# Cust Module                          #
+# lib Module                           #
 ########################################
 
 #
-# Custom rules -> elf
-ifneq ($(cust),)
-include $(BUILD_HOME)/build_cust.mk
-endif
+# Active rule: object to lib
+include $(BUILD_HOME)/build_lib.mk
 
 ########################################
 # Bin Module                           #
 ########################################
 
 #
-# Custom rules -> Binary
-ifneq ($(bin),)
+# Active rules: assembly to bin
 include $(BUILD_HOME)/build_bin.mk
-endif
 
 ########################################
 # Nasm Module                          #
 ########################################
 
 #
-# nasm -> rules
-ifneq ($(nasm),)
+# Active rules: assembly to bin
 include $(BUILD_HOME)/build_nasm.mk
-endif
+
+########################################
+# Cust Module                          #
+########################################
+
+#
+# Active rules: cust rules to elf
+include $(BUILD_HOME)/build_cust.mk
 
 ########################################
 # Host Module                          #
 ########################################
 
-ifneq ($(hostprogs) $(always-y),)
+#
+# hostprogs -> rules
 include $(BUILD_HOME)/build_host.mk
-endif
 
 ########################################
 # Start build                          #

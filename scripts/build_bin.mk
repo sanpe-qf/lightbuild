@@ -2,12 +2,17 @@
 # ==========================================================================
 # Make bin
 # ==========================================================================
- 
-bin := $(sort $(bin))
 
+########################################
+# Sort files                           #
+########################################
 
-nasm-single	:= $(addprefix $(obj)/,$(nasm-single))
+bin-target	:= $(sort $(bin))
+bin-target	:= $(addprefix $(obj)/,$(bin-target))
 
+ifndef bin_flags
+bin_flags	:= -O binary -j .text -j .rodata 
+endif 
 
 ########################################
 # Start build                          #
@@ -16,6 +21,8 @@ nasm-single	:= $(addprefix $(obj)/,$(nasm-single))
 # Create executable from a single .c file
 # host-csingle -> Executable
 quiet_cmd_build_bin = $(ECHO_BIN)  $@
-      cmd_build_bin	= $(OBJDUMP) $(nasm_flags) -o $@ $< 
-$(nasm-single): $(obj)/%: $(src)/%.S FORCE
+      cmd_build_bin	= $(OBJCOPY) $(bin_flags) $@ $< 
+$(bin-target): $(elf-target) FORCE
 	$(call if_changed,build_bin)
+
+targets += $(bin-target) 
