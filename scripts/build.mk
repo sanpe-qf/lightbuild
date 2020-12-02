@@ -8,6 +8,33 @@ PHONY := _build
 _build:
 
 #
+# Init parameters
+obj-y :=
+obj-m :=
+lib-y :=
+lib-m :=
+always :=
+always-y :=
+always-m :=
+targets :=
+subdir-y :=
+subdir-m :=
+EXTRA_AFLAGS   :=
+EXTRA_CFLAGS   :=
+EXTRA_CPPFLAGS :=
+EXTRA_LDFLAGS  :=
+asflags-y  :=
+ccflags-y  :=
+cppflags-y :=
+ldflags-y  :=
+subdir-asflags-y :=
+subdir-ccflags-y :=
+
+# flags that take effect in current and sub directories
+KBUILD_AFLAGS += $(subdir-asflags-y)
+KBUILD_CFLAGS += $(subdir-ccflags-y)
+
+#
 # Include Build function
 include $(BUILD_HOME)/build_def.mk
 
@@ -17,13 +44,20 @@ include $(BUILD_HOME)/define.mk
 
 #
 # Read auto.conf if it exists, otherwise ignore
--include $(MAKE_HOME)/config/auto.conf
+-include $(MAKE_HOME)/include/config/auto.conf
 
 #
 # Include obj makefile
 build-dir := $(if $(filter /%,$(src)),$(src),$(MAKE_HOME)/$(src))
 build-file := $(if $(wildcard $(build-dir)/Kbuild),$(build-dir)/Kbuild,$(build-dir)/Makefile)
 include $(build-file)
+
+########################################
+# Start include                        #
+########################################
+
+INCLUDE		+= $(addprefix $(obj)/,$(include-y))
+export INCLUDE
 
 ########################################
 # Old compatible                       #
@@ -51,7 +85,7 @@ hostprogs  += $(hostprogs-y)
 endif
 
 ########################################
-# Always build                        #
+# Always build                         #
 ########################################
 
 
@@ -76,19 +110,20 @@ always-y 	+= $(lib-always-y)
 bin 		+= $(bin-always-y)
 always-y 	+= $(bin-always-y)
 
+# nasm-always-y += foo
+# ... is a shorthand for
+# nasm += foo
+nasm 		+= $(nasm-always-y)
+
 # cust-always-y += foo
 # ... is a shorthand for
 # cust += foo
-# always-y  += foo
 cust 		+= $(cust-always-y)
-always-y 	+= $(cust-always-y)
 
 # hostprogs-always-y += foo
 # ... is a shorthand for
 # hostprogs += foo
-# always-y  += foo
 hostprogs 	+= $(hostprogs-always-y)
-always-y 	+= $(hostprogs-always-y)
 
 always-y	:= $(addprefix $(obj)/,$(always-y))
 targets 	+= $(always-y)
@@ -97,8 +132,16 @@ targets 	+= $(always-y)
 # filter subdir                        #
 ########################################
 
-subdir-y	:= $(patsubst %/,%,$(filter %/, $(obj-y)))
-subdir-y	:= $(sort $(subdir-y))
+#
+# filter subdir 
+subdir-y		:= $(obj-y)
+subdir-y		:= $(strip $(sort $(subdir-y)))
+subdir-y		:= $(filter %/, $(subdir-y))
+subdir-y		:= $(patsubst %/,%,$(subdir-y))
+subdir-y		:= $(addprefix $(obj)/,$(subdir-y))
+
+export SUBDIR_ASFLAGS := $(SUBDIR_ASFLAGS) $(subdir-asflags-y)
+export SUBDIR_CCFLAGS := $(SUBDIR_CCFLAGS) $(subdir-ccflags-y)
 
 
 # Libraries are always collected in one lib file.
@@ -119,20 +162,20 @@ obj-dirs := $(dir $(subdir-obj-y))
 real-objs-y := $(foreach m, $(filter-out $(subdir-obj-y), $(obj-y)), $(if $(strip $($(m:.o=-objs)) $($(m:.o=-y))),$($(m:.o=-objs)) $($(m:.o=-y)),$(m))) $(extra-y)
 
 ########################################
-# OBJ Module                           #
+# basic rule                           #
 ########################################
 
 #
 # Passive rule
-include $(BUILD_HOME)/build_obj.mk
+include $(BUILD_HOME)/build_basic.mk
 
 ########################################
-# Exe Module                           #
+# basic rule                           #
 ########################################
 
 #
-# Passive rule: object to elf
-include $(BUILD_HOME)/build_elf.mk
+# Passive rule
+include $(BUILD_HOME)/build_main.mk
 
 ########################################
 # lib Module                           #
@@ -141,6 +184,14 @@ include $(BUILD_HOME)/build_elf.mk
 #
 # Active rule: object to lib
 include $(BUILD_HOME)/build_lib.mk
+
+########################################
+# Exe Module                           #
+########################################
+
+#
+# Passive rule: object to elf
+include $(BUILD_HOME)/build_elf.mk
 
 ########################################
 # Bin Module                           #
@@ -154,31 +205,46 @@ include $(BUILD_HOME)/build_bin.mk
 # Nasm Module                          #
 ########################################
 
+ifneq ($(nasm),)
+rules += rule_nasm
+endif
+
 #
-# Active rules: assembly to bin
-include $(BUILD_HOME)/build_nasm.mk
+# Independent rules: assembly to bin
+rule_nasm:
+	$(Q)$(MAKE) -f $(BUILD_HOME)/build_nasm.mk obj=$(obj)
 
 ########################################
 # Cust Module                          #
 ########################################
 
+ifneq ($(cust),)
+rules += rule_cust
+endif
+
 #
-# Active rules: cust rules to elf
-include $(BUILD_HOME)/build_cust.mk
+# Independent rules: cust rules to elf
+rule_cust:
+	$(Q)$(MAKE) -f $(BUILD_HOME)/build_cust.mk
 
 ########################################
 # Host Module                          #
 ########################################
 
+ifneq ($(hostprogs),)
+rules += rule_host
+endif
+
 #
-# hostprogs -> rules
-include $(BUILD_HOME)/build_host.mk
+# Independent rules: hostprogs ruled to rules
+rule_host:
+	$(Q)$(MAKE) -f $(BUILD_HOME)/build_host.mk
 
 ########################################
 # Start build                          #
 ########################################
 
-_build: $(always-y) $(subdir-y)
+_build: $(rules) $(always-y) $(subdir-y)
 
 ########################################
 # Descending build                     #

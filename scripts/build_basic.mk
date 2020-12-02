@@ -9,13 +9,16 @@
 
 #
 # Sort file
+obj-y			:= $(sort $(obj-y))
 extra-y			:= $(sort $(extra-y))
 lib-y			:= $(sort $(lib-y))
 
 #
 # Add file
+obj-y			:= $(addprefix $(obj)/,$(obj-y))
 extra-y			:= $(addprefix $(obj)/,$(extra-y))
 lib-y			:= $(addprefix $(obj)/,$(lib-y))
+
 
 ########################################
 # OBJ options                          #
@@ -50,24 +53,20 @@ ld_flags	= $(LDFLAGS) $(ldflags-y)
 
 
 ########################################
-# Start build                          #
+# Start rule                           #
 ########################################
 
 # Compile C sources (.c)
 # ---------------------------------------------------------------------------
 
-# Default is built-in, unless we know otherwise
-modkern_cflags = $(KBUILD_CFLAGS_KERNEL) $(CFLAGS_KERNEL)
-quiet_modtag := $(empty)   $(empty)
-
-quiet_cmd_cc_s_c = $(ECHO_CC) $(quiet_modtag)  $@
+quiet_cmd_cc_s_c = $(ECHO_CC) $@
 	  cmd_cc_s_c = $(CC) $(c_flags) -fverbose-asm -S -o $@ $<
-
 $(obj)/%.s: $(src)/%.c FORCE
 	$(call if_changed_dep,cc_s_c)
-quiet_cmd_cc_i_c = $(ECHO_CPP) $(quiet_modtag) $@
-	  cmd_cc_i_c = $(CPP) $(c_flags)   -o $@ $<
 
+	
+quiet_cmd_cc_i_c = $(ECHO_CPP) $@
+	  cmd_cc_i_c = $(CPP) $(c_flags)   -o $@ $<
 $(obj)/%.i: $(src)/%.c FORCE
 	$(call if_changed_dep,cc_i_c)
 
@@ -75,7 +74,7 @@ $(obj)/%.i: $(src)/%.c FORCE
 # The C file is compiled and updated dependency information is generated.
 # (See cmd_cc_o_c + relevant part of rule_cc_o_c)
 
-quiet_cmd_cc_o_c = $(ECHO_CC) $(quiet_modtag) $@
+quiet_cmd_cc_o_c = $(ECHO_CC) $@
 	  cmd_cc_o_c = $(CC) $(c_flags) -c -o $@ $<
 
 define rule_cc_o_c
@@ -101,16 +100,14 @@ $(obj)/%.lst: $(src)/%.c FORCE
 # Compile assembler sources (.S)
 # ---------------------------------------------------------------------------
 
-modkern_aflags := $(KBUILD_AFLAGS_KERNEL) $(AFLAGS_KERNEL)
-
-quiet_cmd_as_s_S	= $(ECHO_CPP) $(quiet_modtag) $@
+quiet_cmd_as_s_S	= $(ECHO_CPP) $@
 	  cmd_as_s_S	= $(CPP) $(a_flags) -o $@ $< 
 
 $(obj)/%.s: $(src)/%.S FORCE
 	$(call if_changed_dep,as_s_S)
 
-quiet_cmd_as_o_S = $(ECHO_AS) $(quiet_modtag)  $@
-cmd_as_o_S       = $(CC) $(a_flags) -c -o $@ $<
+quiet_cmd_as_o_S = $(ECHO_AS) $@
+cmd_as_o_S       = $(AS) $(a_flags) -c -o $@ $<
 
 $(obj)/%.o: $(src)/%.S FORCE
 	$(call if_changed_dep,as_o_S)
@@ -120,15 +117,16 @@ targets += $(extra-y) $(MAKECMDGOALS)
 
 # Linker scripts preprocessor (.lds.S -> .lds)
 # ---------------------------------------------------------------------------
-quiet_cmd_cpp_lds_S = LDS     $@
+quiet_cmd_cpp_lds_S = LDS $@
       cmd_cpp_lds_S = $(CPP) $(cpp_flags) -P -C -U$(ARCH) \
 	                     -D__ASSEMBLY__ -DLINKER_SCRIPT -o $@ $<
 
 $(obj)/%.lds: $(src)/%.lds.S FORCE
 	$(call if_changed_dep,cpp_lds_S)
 
-# Build the compiled-in targets
-# ---------------------------------------------------------------------------
+# # Build the compiled-in targets
+# # ---------------------------------------------------------------------------
 
-# To build objects in subdirs, we need to descend into the directories
-$(sort $(subdir-obj-y)): $(subdir-ym) ;
+# # To build objects in subdirs, we need to descend into the directories
+# $(sort $(subdir-obj-y)): $(subdir-ym) ;
+

@@ -119,20 +119,19 @@ quiet_cmd_host-cxxmulti	= $(ECHO_HOSTLD) $@
 			  $(KBUILD_HOSTLDLIBS) $(HOSTLDLIBS_$(@F))
 $(host-cxxmulti): FORCE
 	$(call if_changed,host-cxxmulti)
-
 $(call multi_depend, $(host-cxxmulti), , -objs -cxxobjs)
 
 # Create .o file from a single .cc (C++) file
 quiet_cmd_host-cxxobjs	= $(ECHO_HOSTCXX) $@
       cmd_host-cxxobjs	= $(HOSTCXX) $(hostcxx_flags) -c -o $@ $<
-$(host-cxxobjs): $(obj)/%.o: $(src)/%.cc FORCE
+$(cust-cxxobjs): $(obj)/%.o: $(src)/%.cc FORCE
 	$(call if_changed_dep,host-cxxobjs)
 
 # Compile .c file, create position independent .o file
 # host-cshobjs -> .o
 quiet_cmd_host-cshobjs	= $(ECHO_HOSTCC)  -fPIC $@
       cmd_host-cshobjs	= $(HOSTCC) $(hostc_flags) -fPIC -c -o $@ $<
-$(host-cshobjs): $(obj)/%.o: $(src)/%.c FORCE
+$(cust-cshobjs): $(obj)/%.o: $(src)/%.c FORCE
 	$(call if_changed_dep,host-cshobjs)
 
 # Compile .c file, create position independent .o file
@@ -153,7 +152,6 @@ quiet_cmd_host-cshlib	= $(ECHO_HOSTLLD) -shared $@
 			  $(HOST_LOADLIBES) $(HOSTLDLIBS_$(@F))
 $(host-cshlib): FORCE
 	$(call if_changed,host-cshlib)
-
 $(call multi_depend, $(host-cshlib), .so, -objs)
 
 # Link a shared library, based on position independent .o files
@@ -164,7 +162,6 @@ quiet_cmd_host-cxxshlib	= $(ECHO_HOSTLLD) -shared $@
 			  $(HOST_LOADLIBES) $(HOSTLDLIBS_$(@F))
 $(host-cxxshlib): FORCE
 	$(call if_changed,host-cxxshlib)
-	
 $(call multi_depend, $(host-cxxshlib), .so, -objs)
 
 ########################################

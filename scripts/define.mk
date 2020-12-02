@@ -32,6 +32,18 @@ NASM		:= nasm
 #
 # Rust toolchain
 
+#
+# Gcc toolchain
+CUST_AS			:= $(CROSS_COMPILE)as
+CUST_LD			:= $(CROSS_COMPILE)ld
+CUST_CC			:= $(CROSS_COMPILE)gcc
+CUST_CPP			:= $(CROSS_COMPILE)gcc -E
+CUST_AR			:= $(CROSS_COMPILE)ar
+CUST_NM			:= $(CROSS_COMPILE)nm
+CUST_STRIP		:= $(CROSS_COMPILE)strip
+CUST_OBJCOPY		:= $(CROSS_COMPILE)objcopy
+CUST_OBJDUMP		:= $(CROSS_COMPILE)objdump
+
 
 
 AS_FLAGS 		:= 
@@ -82,6 +94,11 @@ ECHO_AS			:= \e[32mAS\e[0m
 ECHO_AR			:= \e[32mAR\e[0m
 ECHO_LD			:= \e[35mLD\e[0m
 
+ECHO_CUSTAS		:= \e[32mCUSTCC\e[0m
+ECHO_CUSTCC		:= \e[32mCUSTCC\e[0m
+ECHO_CUSTCXX	:= \e[32mCUSTCXX\e[0m
+ECHO_CUSTLD		:= \e[35mCUSTLD\e[0m
+
 ECHO_NASM		:= \e[35mNASM\e[0m
 
 ECHO_BIN		:= \e[35mBIN\e[0m
@@ -101,18 +118,23 @@ ECHO_OUTPUT		:= \e[34mOUTPUT\e[0m
 # Build tool define                    #
 ########################################
 
-# Shorthand for $(Q)$(MAKE) -f scripts/Makefile.build obj=
+# Shorthand for $(Q)$(MAKE) -f scripts/remake.mk obj=
 # Usage:
 # $(Q)$(MAKE) $(build)=dir
 remake		:= -f $(BUILD_HOME)/remake.mk obj
 
-# Shorthand for $(Q)$(MAKE) -f scripts/Makefile.build obj=
+# Shorthand for $(Q)$(MAKE) -f scripts/init_build.mk obj=
+# Usage:
+# $(Q)$(MAKE) $(build)=dir
+init		:= -f $(BUILD_HOME)/init_build.mk obj
+
+# Shorthand for $(Q)$(MAKE) -f scripts/build.mk obj=
 # Usage:
 # $(Q)$(MAKE) $(build)=dir
 build		:= -f $(BUILD_HOME)/build.mk obj
 
 ###
-# Shorthand for $(Q)$(MAKE) -f scripts/Makefile.clean obj=
+# Shorthand for $(Q)$(MAKE) -f scripts/clean.mk obj=
 # Usage:
 # $(Q)$(MAKE) $(clean)=dir
 clean		:= -f $(BUILD_HOME)/clean.mk obj

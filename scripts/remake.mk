@@ -27,17 +27,14 @@ include $(sub-file)
 project		:= $(project-y)
 project		:= $(strip $(sort $(project)))
 project		:= $(filter %/, $(project))
-project		:= $(foreach s,$(project),$(s)_remake_)
-project		:= $(subst /_remake_,,$(project))
+project		:= $(patsubst %/,%,$(project))
 project		:= $(addprefix $(obj)/,$(project))
-
-project		:= $(addprefix $(obj)/,$(subst /_remake_,,$(foreach s,$(strip $(sort $(project-y))),$(s)_remake_)))
 
 ########################################
 # Start include                        #
 ########################################
 
-INCLUDE		+= $(addprefix $(obj)/,$(include-y))
+INCLUDE		+= $(addprefix $(obj)/,$(projrct-include-y))
 export INCLUDE
 
 ########################################
@@ -99,7 +96,7 @@ _distclean: $(project) mrproper
 ########################################
 
 PHONY += $(project)
-$(project):
+$(project): FORCE
 	$(Q)$(MAKE) $(remake)=$@ $(MAKECMDGOALS)
 
 ########################################

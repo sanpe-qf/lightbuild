@@ -1,0 +1,1 @@
+cmd_/disk/d/code/product/light-build/scripts/kconfig/conf := gcc  -o /disk/d/code/product/light-build/scripts/kconfig/conf /disk/d/code/product/light-build/scripts/kconfig/conf.o /disk/d/code/product/light-build/scripts/kconfig/zconf.tab.o  
