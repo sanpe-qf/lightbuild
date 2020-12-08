@@ -8,12 +8,8 @@ PHONY := _build
 _build:
 
 #
-# Include Build function
-include $(BUILD_HOME)/build_def.mk
-
-#
 # Include Buildsystem function
-include $(BUILD_HOME)/define.mk
+include $(BUILD_HOME)/include/define.mk
 
 #
 # Read auto.conf if it exists, otherwise ignore
@@ -70,6 +66,8 @@ nasm-objs	:= $(sort $(foreach m,$(nasm),$($(m)-objs)))
 nasm-single	:= $(addprefix $(obj)/,$(nasm-single))
 always-y	:= $(addprefix $(obj)/,$(always-y))
 
+targets += $(nasm-single)
+
 ########################################
 # NASM options                         #
 ########################################
@@ -92,7 +90,6 @@ quiet_cmd_nasm-multi 	= $(ECHO_NASM)  $@
 $(nasm-multi): $(obj)/%: $(src)/%.S FORCE
 	$(call if_changed,nasm-multi)
 
-targets += $(nasm-single)
 
 ########################################
 # Start build                          #

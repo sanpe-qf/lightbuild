@@ -9,12 +9,8 @@ PHONY := _build
 _build:
 
 #
-# Include Build function
-include $(BUILD_HOME)/build_def.mk
-
-#
 # Include Buildsystem function
-include $(BUILD_HOME)/define.mk
+include $(BUILD_HOME)/include/define.mk
 
 #
 # Read auto.conf if it exists, otherwise ignore
@@ -25,6 +21,17 @@ include $(BUILD_HOME)/define.mk
 build-dir := $(if $(filter /%,$(src)),$(src),$(MAKE_HOME)/$(src))
 build-file := $(if $(wildcard $(build-dir)/Kbuild),$(build-dir)/Kbuild,$(build-dir)/Makefile)
 include $(build-file)
+
+########################################
+# Always build                         #
+########################################
+
+# bin-always-y += foo
+# ... is a shorthand for
+# bin += foo
+# always-y  += foo
+bin 		+= $(bin-always-y)
+always-y 	+= $(bin-always-y)
 
 # cust-always-y += foo
 # ... is a shorthand for
@@ -51,23 +58,6 @@ cust-multi := $(foreach m,$(cust), \
 
 cust-objs	:= $(sort $(foreach m,$(cust),$($(m)-obj-y)))
 
-
-########################################
-# Cust options                         #
-########################################
-
-ifneq ($(cust-as),)
-CUST_AS			:= $(cust-as)
-endif
-
-ifneq ($(cust-cc),)
-CUST_CC			:= $(cust-cc)
-endif
-
-cust_a_flags	:= $(cust-asflags-y)
-cust_c_flags	:= $(cust-ccflags-y)
-cust_ld_flags	:= $(cust-ldflags-y)
-
 ########################################
 # Add path                             #
 ########################################
@@ -77,9 +67,35 @@ cust-multi	:= $(addprefix $(obj)/,$(cust-multi))
 cust-objs	:= $(addprefix $(obj)/,$(cust-objs))
 always-y	:= $(addprefix $(obj)/,$(always-y))
 
+targets += $(cust-objs) $(cust-single) $(cust-multi)
+
 ########################################
-# Compile O sources                    #
+# Cust options                         #
 ########################################
+
+ifneq ($(cust-cpp),)
+CUST_CPP		:= $(cust-cpp)
+endif
+
+ifneq ($(cust-as),)
+CUST_AS			:= $(cust-as)
+endif
+
+ifneq ($(cust-cc),)
+CUST_CC			:= $(cust-cc)
+endif
+
+include_file := $(addprefix -I ,$(INCLUDE))
+
+cust_a_flags	:= $(include_file) $(cust-asflags-y)
+cust_c_flags	:= $(include_file) $(cust-ccflags-y)
+cust_ld_flags	:= $(include_file) $(cust-ldflags-y)
+
+########################################
+# Start rule                           #
+########################################
+
+include $(BUILD_HOME)/auxiliary/build_bin.mk
 
 # Create executable from a single .c file
 # host-csingle -> Executable
@@ -91,27 +107,25 @@ $(cust-single): $(obj)/%: $(src)/%.c FORCE
 # Link an executable based on list of .o files, all plain c
 # host-cmulti -> executable
 quiet_cmd_host-cmulti	= $(ECHO_CUSTLD) $@
-      cmd_host-cmulti	= $(CUST_LD) $(cust_ld_flags) -o $@ $^
-$(cust-multi): $(cust-objs)
+      cmd_host-cmulti	= $(CUST_LD) $(cust_ld_flags) -o $@ \
+	  					$(addprefix $(obj)/,$($(@F)-obj-y)) 
+$(cust-multi): FORCE
 	$(call if_changed,host-cmulti)
+$(call multi_depend, $(cust-multi), , -obj-y)
 
-########################################
-# Compile C sources                    #
-########################################
+#
+# Create single .s middle file from single .c file
+quiet_cmd_cc_s_c = $(ECHO_CUSTCC) $@
+	  cmd_cc_s_c = $(CUST_CC) $(cust_c_flags) -fverbose-asm -S -o $@ $<
+$(obj)/%.s: $(src)/%.c FORCE
+	$(call if_changed,cc_s_c)
 
-# #
-# # Create single .s middle file from single .c file
-# quiet_cmd_cc_s_c = $(ECHO_CUSTCC) $@
-# 	  cmd_cc_s_c = $(CUST_CC) $(cust_c_flags) -fverbose-asm -S -o $@ $<
-# $(obj)/%.s: $(src)/%.c FORCE
-# 	$(call if_changed_dep,cc_s_c)
-
-# #
-# # Create single .s middle file from single .c file	
-# quiet_cmd_cc_i_c = $(ECHO_CUSTCPP) $@
-# 	  cmd_cc_i_c = $(CUST_CPP) $(cust_c_flags)   -o $@ $<
-# $(obj)/%.i: $(src)/%.c FORCE
-# 	$(call if_changed_dep,cc_i_c)
+#
+# Create single .s middle file from single .c file	
+quiet_cmd_cc_i_c = $(ECHO_CUSTCPP) $@
+	  cmd_cc_i_c = $(CUST_CPP) $(cust_c_flags)   -o $@ $<
+$(obj)/%.i: $(src)/%.c FORCE
+	$(call if_changed,cc_i_c)
 
 #
 # Create single .s middle file from single .c file
@@ -120,34 +134,28 @@ quiet_cmd_cc_o_c = $(ECHO_CUSTCC) $@
 $(obj)/%.o: $(src)/%.c FORCE
 	$(call if_changed,cc_o_c)
 
-# quiet_cmd_cc_lst_c = MKLST   $@
-#       cmd_cc_lst_c = $(CUST_CC) $(cust_c_flags) -g -c -o $*.o $< && \
-# 		     $(CONFIG_SHELL) $(srctree)/scripts/makelst $*.o \
-# 				     System.map $(OBJDUMP) > $@
-# $(obj)/%.lst: $(src)/%.c FORCE
-# 	$(call if_changed,cc_lst_c)
+quiet_cmd_cc_lst_c = MKLST   $@
+      cmd_cc_lst_c = $(CUST_CC) $(cust_c_flags) -g -c -o $*.o $< && \
+		     $(CONFIG_SHELL) $(srctree)/scripts/makelst $*.o \
+				     System.map $(OBJDUMP) > $@
+$(obj)/%.lst: $(src)/%.c FORCE
+	$(call if_changed,cc_lst_c)
 
-########################################
-# Compile assembler sources            #
-########################################
-
-# quiet_cmd_as_s_S	= $(ECHO_CUSTCPP) $@
-# 	  cmd_as_s_S	= $(CUST_CPP) $(cust_a_flags) -o $@ $< 
-# $(obj)/%.s: $(src)/%.S FORCE
-# 	$(call if_changed_dep,as_s_S)
+quiet_cmd_as_s_S	= $(ECHO_CUSTCPP) $@
+	  cmd_as_s_S	= $(CUST_CPP) $(cust_a_flags) -o $@ $< 
+$(obj)/%.s: $(src)/%.S FORCE
+	$(call if_changed,as_s_S)
 
 quiet_cmd_as_o_S = $(ECHO_CUSTAS) $@
 	  cmd_as_o_S = $(CUST_AS) $(cust_a_flags) -o $@ $<
 $(obj)/%.o: $(src)/%.S FORCE
 	$(call if_changed,as_o_S)
 
-targets += 
-
 ########################################
 # Start build                          #
 ########################################
 
-_build: $(rules) $(always-y) $(subdir-y)
+_build: $(always-y) $(subdir-y)
 
 ########################################
 # Descending build                     #

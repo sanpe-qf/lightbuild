@@ -1,9 +1,10 @@
-cmd_/disk/d/code/product/lightcore/scripts/kconfig/conf.o := gcc -Wp,-MD,/disk/d/code/product/lightcore/scripts/kconfig/.conf.o.d      -c -o /disk/d/code/product/lightcore/scripts/kconfig/conf.o /disk/d/code/product/lightcore/scripts/kconfig/conf.c
+cmd_/disk/d/code/product/lightcore/scripts/kconfig/nconf.gui.o := gcc -Wp,-MD,/disk/d/code/product/lightcore/scripts/kconfig/.nconf.gui.o.d     -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=600 -c -o /disk/d/code/product/lightcore/scripts/kconfig/nconf.gui.o /disk/d/code/product/lightcore/scripts/kconfig/nconf.gui.c
 
-source_/disk/d/code/product/lightcore/scripts/kconfig/conf.o := /disk/d/code/product/lightcore/scripts/kconfig/conf.c
+source_/disk/d/code/product/lightcore/scripts/kconfig/nconf.gui.o := /disk/d/code/product/lightcore/scripts/kconfig/nconf.gui.c
 
-deps_/disk/d/code/product/lightcore/scripts/kconfig/conf.o := \
+deps_/disk/d/code/product/lightcore/scripts/kconfig/nconf.gui.o := \
   /usr/include/stdc-predef.h \
+  /disk/d/code/product/lightcore/scripts/kconfig/nconf.h \
   /usr/include/ctype.h \
   /usr/include/features.h \
   /usr/include/sys/cdefs.h \
@@ -19,6 +20,17 @@ deps_/disk/d/code/product/lightcore/scripts/kconfig/conf.o := \
   /usr/include/bits/endianness.h \
   /usr/include/bits/types/locale_t.h \
   /usr/include/bits/types/__locale_t.h \
+  /usr/include/errno.h \
+  /usr/include/bits/errno.h \
+  /usr/include/linux/errno.h \
+  /usr/include/asm/errno.h \
+  /usr/include/asm-generic/errno.h \
+  /usr/include/asm-generic/errno-base.h \
+  /usr/include/fcntl.h \
+  /usr/include/bits/fcntl.h \
+  /usr/include/bits/fcntl-linux.h \
+  /usr/include/bits/types/struct_timespec.h \
+  /usr/include/bits/stat.h \
   /usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include-fixed/limits.h \
   /usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include-fixed/syslimits.h \
   /usr/include/limits.h \
@@ -27,21 +39,15 @@ deps_/disk/d/code/product/lightcore/scripts/kconfig/conf.o := \
   /usr/include/bits/local_lim.h \
   /usr/include/linux/limits.h \
   /usr/include/bits/posix2_lim.h \
-  /usr/include/stdio.h \
-  /usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stddef.h \
+  /usr/include/bits/xopen_lim.h \
+  /usr/include/bits/uio_lim.h \
   /usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdarg.h \
-  /usr/include/bits/types/__fpos_t.h \
-  /usr/include/bits/types/__mbstate_t.h \
-  /usr/include/bits/types/__fpos64_t.h \
-  /usr/include/bits/types/__FILE.h \
-  /usr/include/bits/types/FILE.h \
-  /usr/include/bits/types/struct_FILE.h \
-  /usr/include/bits/stdio_lim.h \
-  /usr/include/bits/floatn.h \
-  /usr/include/bits/floatn-common.h \
   /usr/include/stdlib.h \
+  /usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stddef.h \
   /usr/include/bits/waitflags.h \
   /usr/include/bits/waitstatus.h \
+  /usr/include/bits/floatn.h \
+  /usr/include/bits/floatn-common.h \
   /usr/include/sys/types.h \
   /usr/include/bits/types/clock_t.h \
   /usr/include/bits/types/clockid_t.h \
@@ -56,7 +62,6 @@ deps_/disk/d/code/product/lightcore/scripts/kconfig/conf.o := \
   /usr/include/bits/types/sigset_t.h \
   /usr/include/bits/types/__sigset_t.h \
   /usr/include/bits/types/struct_timeval.h \
-  /usr/include/bits/types/struct_timespec.h \
   /usr/include/bits/pthreadtypes.h \
   /usr/include/bits/thread-shared-types.h \
   /usr/include/bits/pthreadtypes-arch.h \
@@ -66,10 +71,6 @@ deps_/disk/d/code/product/lightcore/scripts/kconfig/conf.o := \
   /usr/include/bits/stdlib-float.h \
   /usr/include/string.h \
   /usr/include/strings.h \
-  /usr/include/time.h \
-  /usr/include/bits/time.h \
-  /usr/include/bits/types/struct_tm.h \
-  /usr/include/bits/types/struct_itimerspec.h \
   /usr/include/unistd.h \
   /usr/include/bits/posix_opt.h \
   /usr/include/bits/environments.h \
@@ -77,25 +78,43 @@ deps_/disk/d/code/product/lightcore/scripts/kconfig/conf.o := \
   /usr/include/bits/getopt_posix.h \
   /usr/include/bits/getopt_core.h \
   /usr/include/bits/unistd_ext.h \
-  /usr/include/getopt.h \
-  /usr/include/bits/getopt_ext.h \
-  /usr/include/sys/stat.h \
-  /usr/include/bits/stat.h \
+  /usr/include/curses.h \
+  /usr/include/ncurses_dll.h \
+  /usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdint.h \
+  /usr/include/stdint.h \
+  /usr/include/bits/wchar.h \
+  /usr/include/bits/stdint-uintn.h \
+  /usr/include/stdio.h \
+  /usr/include/bits/types/__fpos_t.h \
+  /usr/include/bits/types/__mbstate_t.h \
+  /usr/include/bits/types/__fpos64_t.h \
+  /usr/include/bits/types/__FILE.h \
+  /usr/include/bits/types/FILE.h \
+  /usr/include/bits/types/struct_FILE.h \
+  /usr/include/bits/stdio_lim.h \
+  /usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdbool.h \
+  /usr/include/wchar.h \
+  /usr/include/bits/types/wint_t.h \
+  /usr/include/bits/types/mbstate_t.h \
+  /usr/include/bits/wctype-wchar.h \
+  /usr/include/unctrl.h \
+  /usr/include/curses.h \
+  /usr/include/menu.h \
+  /usr/include/eti.h \
+  /usr/include/panel.h \
+  /usr/include/form.h \
+  /usr/include/time.h \
+  /usr/include/bits/time.h \
+  /usr/include/bits/types/struct_tm.h \
+  /usr/include/bits/types/struct_itimerspec.h \
   /usr/include/sys/time.h \
-  /usr/include/errno.h \
-  /usr/include/bits/errno.h \
-  /usr/include/linux/errno.h \
-  /usr/include/asm/errno.h \
-  /usr/include/asm-generic/errno.h \
-  /usr/include/asm-generic/errno-base.h \
   /disk/d/code/product/lightcore/scripts/kconfig/lkc.h \
     $(wildcard include/config/prefix.h) \
   /disk/d/code/product/lightcore/scripts/kconfig/expr.h \
   /usr/include/assert.h \
   /disk/d/code/product/lightcore/scripts/kconfig/list.h \
-  /usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdbool.h \
   /disk/d/code/product/lightcore/scripts/kconfig/lkc_proto.h \
 
-/disk/d/code/product/lightcore/scripts/kconfig/conf.o: $(deps_/disk/d/code/product/lightcore/scripts/kconfig/conf.o)
+/disk/d/code/product/lightcore/scripts/kconfig/nconf.gui.o: $(deps_/disk/d/code/product/lightcore/scripts/kconfig/nconf.gui.o)
 
-$(deps_/disk/d/code/product/lightcore/scripts/kconfig/conf.o):
+$(deps_/disk/d/code/product/lightcore/scripts/kconfig/nconf.gui.o):

@@ -12,7 +12,7 @@
 AS			:= $(CROSS_COMPILE)as
 LD			:= $(CROSS_COMPILE)ld
 CC			:= $(CROSS_COMPILE)gcc
-CPP			:= $(CROSS_COMPILE)gcc -E
+CPP			:= $(CROSS_COMPILE)cpp
 AR			:= $(CROSS_COMPILE)ar
 NM			:= $(CROSS_COMPILE)nm
 STRIP		:= $(CROSS_COMPILE)strip
@@ -26,7 +26,7 @@ OBJDUMP		:= $(CROSS_COMPILE)objdump
 
 #
 # NASM toolchain
-NASM		:= nasm
+NASM			:= nasm
 
 
 #
@@ -34,15 +34,15 @@ NASM		:= nasm
 
 #
 # Gcc toolchain
+CUST_CPP		:= $(CROSS_COMPILE)cpp
+CUST_CC			:= $(CROSS_COMPILE)gcc
 CUST_AS			:= $(CROSS_COMPILE)as
 CUST_LD			:= $(CROSS_COMPILE)ld
-CUST_CC			:= $(CROSS_COMPILE)gcc
-CUST_CPP			:= $(CROSS_COMPILE)gcc -E
 CUST_AR			:= $(CROSS_COMPILE)ar
 CUST_NM			:= $(CROSS_COMPILE)nm
 CUST_STRIP		:= $(CROSS_COMPILE)strip
-CUST_OBJCOPY		:= $(CROSS_COMPILE)objcopy
-CUST_OBJDUMP		:= $(CROSS_COMPILE)objdump
+CUST_OBJCOPY	:= $(CROSS_COMPILE)objcopy
+CUST_OBJDUMP	:= $(CROSS_COMPILE)objdump
 
 
 
@@ -87,6 +87,27 @@ CONFIG_SHELL	:= $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 # Echo tips                            #
 ########################################
 
+########################
+# font:
+# \e[31m : red       
+# \e[32m : light green
+# \e[33m : orange
+# \e[34m : blue
+# \e[35m : purple
+# \e[36m : dark green
+# \e[37m : white
+#
+# background:
+# \e[40m : black
+# \e[41m : dark red       
+# \e[42m : light green
+# \e[43m : orange
+# \e[44m : blue
+# \e[45m : purple
+# \e[46m : dark green
+# \e[47m : white
+########################
+
 ECHO_CPP		:= \e[32mCPP\e[0m
 ECHO_CC			:= \e[32mCC\e[0m
 ECHO_CXX		:= \e[32mCXX\e[0m
@@ -94,25 +115,29 @@ ECHO_AS			:= \e[32mAS\e[0m
 ECHO_AR			:= \e[32mAR\e[0m
 ECHO_LD			:= \e[35mLD\e[0m
 
-ECHO_CUSTAS		:= \e[32mCUSTCC\e[0m
+ECHO_CUSTCPP	:= \e[32mCUSTCPP\e[0m
+ECHO_CUSTAS		:= \e[32mCUSTAS\e[0m
 ECHO_CUSTCC		:= \e[32mCUSTCC\e[0m
 ECHO_CUSTCXX	:= \e[32mCUSTCXX\e[0m
 ECHO_CUSTLD		:= \e[35mCUSTLD\e[0m
-
-ECHO_NASM		:= \e[35mNASM\e[0m
-
-ECHO_BIN		:= \e[35mBIN\e[0m
 
 ECHO_HOSTCC		:= \e[32mHOSTCC\e[0m
 ECHO_HOSTCXX	:= \e[32mHOSTCXX\e[0m
 ECHO_HOSTLD		:= \e[35mHOSTLD\e[0m
 ECHO_HOSTLLD	:= \e[35mHOSTLLD\e[0m
 
-ECHO_RM			:= \e[33mRM\e[0m
-ECHO_CLEAN		:= \e[33mCLEAN\e[0m
+ECHO_NASM		:= \e[34mNASM\e[0m
 
-ECHO_DONE		:= \e[34mDONE\e[0m
-ECHO_OUTPUT		:= \e[34mOUTPUT\e[0m
+ECHO_BIN		:= \e[34mMKBIN\e[0m
+
+ECHO_RM			:= \e[31mRM\e[0m
+ECHO_CLEAN		:= \e[31mCLEAN\e[0m
+ECHO_CLEAN_DIR	:= \e[31mCLEANDIR\e[0m
+
+ECHO_DONE		:= \e[5m\e[34mDONE\e[0m
+ECHO_OUTPUT		:= \e[5m\e[34mOUTPUT\e[0m
+
+ECHO_CHECK		:= \e[5m\e[33mCHECK\e[0m
 
 ########################################
 # Build tool define                    #
@@ -132,6 +157,26 @@ init		:= -f $(BUILD_HOME)/init_build.mk obj
 # Usage:
 # $(Q)$(MAKE) $(build)=dir
 build		:= -f $(BUILD_HOME)/build.mk obj
+
+# Shorthand for $(Q)$(MAKE) -f scripts/build_nasm.mk obj=
+# Usage:
+# $(Q)$(MAKE) $(build_nasm)=dir
+build_main	:= -f $(BUILD_HOME)/main/main.mk obj
+
+# Shorthand for $(Q)$(MAKE) -f scripts/build_nasm.mk obj=
+# Usage:
+# $(Q)$(MAKE) $(build_nasm)=dir
+build_nasm	:= -f $(BUILD_HOME)/modules/build_nasm.mk obj
+
+# Shorthand for $(Q)$(MAKE) -f scripts/build_cust.mk obj=
+# Usage:
+# $(Q)$(MAKE) $(build_cust)=dir
+build_cust	:= -f $(BUILD_HOME)/modules/build_cust.mk obj
+
+# Shorthand for $(Q)$(MAKE) -f scripts/build_host.mk obj=
+# Usage:
+# $(Q)$(MAKE) $(build_host)=dir
+build_host	:= -f $(BUILD_HOME)/modules/build_host.mk obj
 
 ###
 # Shorthand for $(Q)$(MAKE) -f scripts/clean.mk obj=
@@ -175,7 +220,7 @@ cc-disable-warning = $(call try-run,\
 
 # cc-version
 # Usage gcc-ver := $(call cc-version)
-cc-version = $(shell $(CONFIG_SHELL) $(BUILD_HOME)/gcc-version.sh $(CC))
+cc-version = $(shell $(CONFIG_SHELL) $(BUILD_HOME)/tools/gcc-version.sh $(CC))
 
 # cc-ifversion
 # Usage:  EXTRA_CFLAGS += $(call cc-ifversion, -lt, 0402, -O1)

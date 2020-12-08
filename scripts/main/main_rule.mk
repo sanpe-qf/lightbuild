@@ -4,25 +4,10 @@
 # ==========================================================================
 
 ########################################
-# Sort file                            #
-########################################
-
-#
-# Sort file
-obj-y			:= $(sort $(obj-y))
-extra-y			:= $(sort $(extra-y))
-lib-y			:= $(sort $(lib-y))
-
-#
-# Add file
-obj-y			:= $(addprefix $(obj)/,$(obj-y))
-extra-y			:= $(addprefix $(obj)/,$(extra-y))
-lib-y			:= $(addprefix $(obj)/,$(lib-y))
-
-
-########################################
 # OBJ options                          #
 ########################################
+
+include_file := $(addprefix -I ,$(INCLUDE))
 
 # Backward compatibility
 asflags-y  += $(EXTRA_AFLAGS)
@@ -40,17 +25,16 @@ _a_flags       = $(KBUILD_CPPFLAGS) $(KBUILD_AFLAGS) $(KBUILD_SUBDIR_ASFLAGS) \
 _cpp_flags     = $(KBUILD_CPPFLAGS) $(cppflags-y) $(CPPFLAGS_$(@F))
 
 
-c_flags		= -Wp,-MD,$(depfile) $(NOSTDINC_FLAGS) -I $(INCLUDE)     \
+c_flags		= -Wp,-MD,$(depfile) $(NOSTDINC_FLAGS) $(include_file)     \
 		 	$(_c_flags) $(modkern_cflags)
 
-a_flags		= -Wp,-MD,$(depfile) $(NOSTDINC_FLAGS) -I $(INCLUDE)     \
+a_flags		= -Wp,-MD,$(depfile) $(NOSTDINC_FLAGS) $(include_file)     \
 		 	$(_a_flags) $(modkern_aflags)
 
-cpp_flags	= -Wp,-MD,$(depfile) $(NOSTDINC_FLAGS) -I $(INCLUDE)     \
+cpp_flags	= -Wp,-MD,$(depfile) $(NOSTDINC_FLAGS) $(include_file)     \
 		 	$(_cpp_flags)
 
 ld_flags	= $(LDFLAGS) $(ldflags-y)
-
 
 ########################################
 # Start rule                           #
@@ -123,10 +107,24 @@ quiet_cmd_cpp_lds_S = LDS $@
 
 $(obj)/%.lds: $(src)/%.lds.S FORCE
 	$(call if_changed_dep,cpp_lds_S)
+	
+#
+# Rule to compile a set of .o files into one .o file
 
-# # Build the compiled-in targets
-# # ---------------------------------------------------------------------------
+quiet_cmd_link_o_target = $(ECHO_LD) $@
+	  cmd_link_o_target = $(if $(strip $(obj-file-y)$(subdir-y)),\
+		      $(LD) $(ld_flags) -r -o $@ $(obj-file-y), \
+		      rm -f $@; $(AR) rcs$(KBUILD_ARFLAGS) $@)
+$(builtin-target): $(obj-file-y) FORCE
+	$(call if_changed,link_o_target)
 
-# # To build objects in subdirs, we need to descend into the directories
-# $(sort $(subdir-obj-y)): $(subdir-ym) ;
+targets += $(builtin-target)
 
+#
+# Rule to compile a set of .o files into one .a file
+quiet_cmd_link_l_target = AR	$@
+	  cmd_link_l_target = rm -f $@; $(AR) rcs$(KBUILD_ARFLAGS) $@ $(lib-y)
+$(lib-target): $(lib-y) FORCE
+	$(call if_changed,link_l_target)
+
+targets += $(lib-target)

@@ -2,6 +2,35 @@
 # ==========================================================================
 # Build host
 # ==========================================================================
+src := $(obj)
+
+PHONY := _build
+_build:
+
+#
+# Include Buildsystem function
+include $(BUILD_HOME)/include/define.mk
+
+#
+# Read auto.conf if it exists, otherwise ignore
+-include $(MAKE_HOME)/include/config/auto.conf
+
+#
+# Include obj makefile
+build-dir := $(if $(filter /%,$(src)),$(src),$(MAKE_HOME)/$(src))
+build-file := $(if $(wildcard $(build-dir)/Kbuild),$(build-dir)/Kbuild,$(build-dir)/Makefile)
+include $(build-file)
+
+########################################
+# Always build                         #
+########################################
+
+# hostprogs-always-y += foo
+# ... is a shorthand for
+# hostprogs += foo
+# always-y  += foo
+hostprogs 	+= $(hostprogs-always-y)
+always-y 	+= $(hostprogs-always-y)
 
 ########################################
 # Sort files                           #
@@ -57,6 +86,7 @@ host-cshlib		:= $(addprefix $(obj)/,$(host-cshlib))
 host-cxxshlib	:= $(addprefix $(obj)/,$(host-cxxshlib))
 host-cshobjs	:= $(addprefix $(obj)/,$(host-cshobjs))
 host-cxxshobjs	:= $(addprefix $(obj)/,$(host-cxxshobjs))
+always-y		:= $(addprefix $(obj)/,$(always-y))
 
 ########################################
 # HOSTCC options                       #
@@ -164,10 +194,42 @@ $(host-cxxshlib): FORCE
 	$(call if_changed,host-cxxshlib)
 $(call multi_depend, $(host-cxxshlib), .so, -objs)
 
-########################################
-# All build files                      #
-########################################
 
 targets += $(host-csingle)  $(host-cmulti) $(host-cobjs)\
 	   $(host-cxxmulti) $(host-cxxobjs) $(host-shared) \
 	   $(host-cshlib) $(host-cshobjs) $(host-cxxshlib) $(host-cxxshobjs)
+
+########################################
+# Start build                          #
+########################################
+
+_build: $(always-y) $(subdir-y)
+
+########################################
+# Descending build                     #
+########################################
+
+PHONY += $(subdir-y)
+$(subdir-y):
+	$(Q)$(MAKE) $(build)=$@
+
+########################################
+# Start FORCE                          #
+########################################
+
+PHONY += FORCE 
+FORCE:
+	
+# Read all saved command lines and dependencies for the $(targets) we
+# may be building above, using $(if_changed{,_dep}). As an
+# optimization, we don't need to read them if the target does not
+# exist, we will rebuild anyway in that case.
+
+targets := $(wildcard $(sort $(targets)))
+cmd_files := $(wildcard $(foreach f,$(targets),$(dir $(f)).$(notdir $(f)).cmd))
+
+ifneq ($(cmd_files),)
+  include $(cmd_files)
+endif
+
+.PHONY: $(PHONY)

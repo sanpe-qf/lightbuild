@@ -8,12 +8,17 @@ src := $(obj)
 
 #
 # Include Buildsystem function
-include $(BUILD_HOME)/define.mk
+include $(BUILD_HOME)/include/define.mk
+
 
 # The filename Kbuild has precedence over Makefile
 clean-dir := $(if $(filter /%,$(src)),$(src),$(MAKE_HOME)/$(src))
 clean-file := $(if $(wildcard $(clean-dir)/Kbuild),$(clean-dir)/Kbuild,$(clean-dir)/Makefile)
 include $(clean-file)
+
+#
+# Include Buildsystem function
+include $(BUILD_HOME)/include/rule.mk
 
 ########################################
 # Filter sub dir                       #
@@ -22,33 +27,33 @@ include $(clean-file)
 #
 # filter sub ymn
 subdir-y	:= $(patsubst %/,%,$(filter %/, $(obj-y)))
-subdir-m	:= $(patsubst %/,%,$(filter %/, $(obj-m)))
 subdir-		:= $(patsubst %/,%,$(filter %/, $(obj-)))
 # Subdirectories we need to descend into
-subdir-ymn      := $(sort $(subdir-y) $(subdir-m) $(subdir-))
+subdir-real	:= $(sort $(subdir-y) $(subdir-m) $(subdir-))
 # Add path
-subdir-ymn		:= $(addprefix $(obj)/,$(subdir-ymn))
+subdir-real	:= $(addprefix $(obj)/,$(subdir-ymn))
 
 ########################################
 # Filter files                         #
 ########################################
 
+result	:= $(filter-out %/, $(result))
+result := $(addprefix $(obj)/,$(result))
+cmd_files := $(wildcard $(foreach f,$(result),$(dir $(f)).$(notdir $(f)).cmd))
+
+clean-files += $(wildcard $(result) $(cmd_files))
 # build a list of files to remove, usually relative to the current
 # directory
-clean-files	:= $(obj-y) $(extra-y) $(extra-m) $(extra-)	\
-		   $(always) $(targets) $(clean-files)		\
-		   $(hostprogs-y) $(hostprogs-m) $(hostprogs) 	\
-		   $(hostlibs-y) $(hostlibs-m) $(hostlibs-) 	\
-		   $(hostcxxlibs-y) $(hostcxxlibs-m)
+clean_files	+= $(clean-files)
 
-clean-files	:= $(filter-out %/, $(clean-files))
+# clean-files	:= $(filter-out %/, $(clean-files))
 
 # clean-files is given relative to the current directory, unless it
 # starts with $(objtree)/ (which means "./", so do not add "./" unless
 # you want to delete a file from the toplevel object directory).
-clean-files   := $(wildcard                                               \
-		   $(addprefix $(obj)/, $(filter-out $(objtree)/%, $(clean-files))) \
-		   $(filter $(objtree)/%, $(clean-files)))
+# clean-files   := $(wildcard                                               \
+# 		   $(addprefix $(obj)/, $(filter-out $(objtree)/%, $(clean-files))) \
+# 		   $(filter $(objtree)/%, $(clean-files)))
 
 # same as clean-files
 clean-dirs    := $(wildcard                                               \
@@ -56,26 +61,25 @@ clean-dirs    := $(wildcard                                               \
 		   $(filter $(objtree)/%, $(clean-dirs)))
 
 ########################################
+# Start rule                           #
+########################################
+
+quiet_cmd_clean_file   	= $(ECHO_CLEAN)	$@
+      cmd_clean_file	= rm -f $@
+$(clean_files): FORCE
+	$(call cmd,clean_file)
+
+quiet_cmd_clean_dir 	= $(ECHO_CLEAN_DIR) $@
+      cmd_clean_dir 	= rm -rf $(clean-dirs)
+$(clean-dirs): FORCE
+	$(call cmd,clean_dir)
+
+########################################
 # Start clean                          #
 ########################################
 
-quiet_cmd_clean    = $(ECHO_CLEAN)   $(obj)
-      cmd_clean    = rm -f $(clean-files)
-quiet_cmd_cleandir = $(ECHO_CLEAN)   $(clean-dirs)
-      cmd_cleandir = rm -rf $(clean-dirs)
-
 PHONY += _clean
-_clean: $(subdir-ymn)
-ifneq ($(strip $(clean-files)),)
-	+$(call cmd,clean)
-endif
-ifneq ($(strip $(clean-dirs)),)
-	+$(call cmd,cleandir)
-endif
-ifneq ($(strip $(clean-rule)),)
-	+$(clean-rule)
-endif
-	@:
+_clean: $(clean_files) $(clean-dirs) $(subdir-real)
 
 ########################################
 # Descending clean                     #
@@ -83,6 +87,9 @@ endif
 PHONY += $(subdir-ymn)
 $(subdir-ymn):
 	$(Q)$(MAKE) $(clean)=$@
+
+PHONY += FORCE 
+FORCE:
 
 # Declare the contents of the PHONY variable as phony.  We keep that
 # information in a variable so we can use it in if_changed and friends.

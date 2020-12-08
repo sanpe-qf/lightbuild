@@ -8,7 +8,7 @@ _build:
 
 #
 # Include Buildsystem function
-include $(BUILD_HOME)/define.mk
+include $(BUILD_HOME)/include/define.mk
 
 #
 # Read auto.conf if it exists, otherwise ignore
@@ -31,7 +31,7 @@ project		:= $(patsubst %/,%,$(project))
 project		:= $(addprefix $(obj)/,$(project))
 
 ########################################
-# Start include                        #
+# include dirs                         #
 ########################################
 
 INCLUDE		+= $(addprefix $(obj)/,$(projrct-include-y))

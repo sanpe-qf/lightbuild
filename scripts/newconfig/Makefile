@@ -4,7 +4,7 @@
 
 #
 # Include BuildSystem function
-include $(BUILD_HOME)/define.mk
+include $(BUILD_HOME)/include/define.mk
 
 
 

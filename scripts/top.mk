@@ -8,8 +8,7 @@
 ########################################
 
 all: build
-	$(call hook)
-	
+
 ########################################
 # Start path                           #
 ########################################
@@ -79,7 +78,7 @@ endif
 
 #
 # Extre Warning
-include $(BUILD_HOME)/build_warn.mk
+include $(BUILD_HOME)/include/warn.mk
 
 #
 # Read auto.conf if it exists, otherwise ignore
@@ -87,7 +86,7 @@ include $(BUILD_HOME)/build_warn.mk
 
 #
 # Tool Define  
-include $(BUILD_HOME)/define.mk
+include $(BUILD_HOME)/include/define.mk
 
 ########################################
 # Start scripts                        #
@@ -110,19 +109,18 @@ config_dir := $(addprefix $(MAKE_HOME)/,$(config_dir))
 
 config: scripts_basic FORCE
 	$(Q)$(MKDIR) $(config_dir)
-	$(Q)$(MAKE) $(build)=$(BUILD_HOME)/kconfig $@
-	$(Q)$(MAKE) $(build)=$(BUILD_HOME)/kconfig syncconfig
+	$(Q)$(MAKE) $(build_host)=$(BUILD_HOME)/kconfig $@
+	$(Q)$(MAKE) $(build_host)=$(BUILD_HOME)/kconfig syncconfig
 
-menuconfig: FORCE
-	$(Q)$(MKDIR) $(config_dir)
-	$(Q)$(MAKE) $(build)=$(BUILD_HOME)/newconfig $@
-	$(Q)$(MAKE) $(build)=$(BUILD_HOME)/kconfig syncconfig
-
+# menuconfig: FORCE
+# 	$(Q)$(MKDIR) $(config_dir)
+# 	$(Q)$(MAKE) $(build_host)=$(BUILD_HOME)/newconfig $@
+# 	$(Q)$(MAKE) $(build_host)=$(BUILD_HOME)/kconfig syncconfig
 
 %config: scripts_basic FORCE
 	$(Q)$(MKDIR) $(config_dir)
-	$(Q)$(MAKE) $(build)=$(BUILD_HOME)/kconfig $@
-	$(Q)$(MAKE) $(build)=$(BUILD_HOME)/kconfig syncconfig
+	$(Q)$(MAKE) $(build_host)=$(BUILD_HOME)/kconfig $@
+	$(Q)$(MAKE) $(build_host)=$(BUILD_HOME)/kconfig syncconfig
 
 ########################################
 # Start checkstack                     #
@@ -197,9 +195,9 @@ help:
 # Start remake                         #
 ########################################
 
-remake_fun += build clean mrproper distclean
-
 PHONY += $(remake_fun) remake
+
+remake_fun += build clean mrproper distclean
 
 $(remake_fun): remake
 remake:FORCE
