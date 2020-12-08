@@ -21,52 +21,9 @@ build-dir := $(if $(filter /%,$(src)),$(src),$(MAKE_HOME)/$(src))
 build-file := $(if $(wildcard $(build-dir)/Kbuild),$(build-dir)/Kbuild,$(build-dir)/Makefile)
 include $(build-file)
 
-ifdef ARCH
-ifneq ($(ARCH),x86)
-$(warning NASM only works with x86 architecture)
-endif
-endif
-
-########################################
-# Always build                         #
-########################################
-
-# bin-always-y += foo
-# ... is a shorthand for
-# bin += foo
-# always-y  += foo
-nasm 		+= $(nasm-always-y)
-always-y 	+= $(nasm-always-y)
-
-########################################
-# Sort files                           #
-########################################
-
-nasm := $(sort $(nasm))
-
-########################################
-# Filter files                         #
-########################################
-
-# nasm code
-# Executables compiled from a single .S file
-nasm-single	:= $(foreach m,$(nasm), \
-			$(if $($(m)-objs),,$(m)))
-
-# C executables linked based on several .o files
-nasm-multi	:= $(foreach m,$(nasm),$(if $($(m)-objs),$(m)))
-
-# Object (.o) files compiled from .S files
-nasm-objs	:= $(sort $(foreach m,$(nasm),$($(m)-objs)))
-
-########################################
-# Add path                             #
-########################################
-
-nasm-single	:= $(addprefix $(obj)/,$(nasm-single))
-always-y	:= $(addprefix $(obj)/,$(always-y))
-
-targets += $(nasm-single)
+#
+# Include host rule
+include $(BUILD_HOME)/modules/host_rule.mk
 
 ########################################
 # NASM options                         #

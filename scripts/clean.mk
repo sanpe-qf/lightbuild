@@ -10,7 +10,6 @@ src := $(obj)
 # Include Buildsystem function
 include $(BUILD_HOME)/include/define.mk
 
-
 # The filename Kbuild has precedence over Makefile
 clean-dir := $(if $(filter /%,$(src)),$(src),$(MAKE_HOME)/$(src))
 clean-file := $(if $(wildcard $(clean-dir)/Kbuild),$(clean-dir)/Kbuild,$(clean-dir)/Makefile)
@@ -18,7 +17,12 @@ include $(clean-file)
 
 #
 # Include Buildsystem function
-include $(BUILD_HOME)/include/rule.mk
+
+include $(BUILD_HOME)/main/main_rule.mk
+include $(BUILD_HOME)/modules/cust_rule.mk
+include $(BUILD_HOME)/modules/host_rule.mk
+include $(BUILD_HOME)/modules/name_rule.mk
+include $(BUILD_HOME)/modules/nasm_rule.mk
 
 ########################################
 # Filter sub dir                       #
@@ -37,14 +41,15 @@ subdir-real	:= $(addprefix $(obj)/,$(subdir-ymn))
 # Filter files                         #
 ########################################
 
-result	:= $(filter-out %/, $(result))
-result := $(addprefix $(obj)/,$(result))
-cmd_files := $(wildcard $(foreach f,$(result),$(dir $(f)).$(notdir $(f)).cmd))
+clean-y		:= $(addprefix $(obj)/,$(clean-y))
+clean-y		:= $(wildcard $(clean-y))
 
-clean-files += $(wildcard $(result) $(cmd_files))
+clean-files	:= $(wildcard $(clean-files))
+clean-cmd 	:= $(wildcard $(foreach f,$(clean-y) $(clean-files),$(dir $(f)).$(notdir $(f)).cmd))
+
 # build a list of files to remove, usually relative to the current
 # directory
-clean_files	+= $(clean-files)
+clean_files	+= $(clean-y) $(clean-files) $(clean-cmd)
 
 # clean-files	:= $(filter-out %/, $(clean-files))
 
@@ -79,7 +84,7 @@ $(clean-dirs): FORCE
 ########################################
 
 PHONY += _clean
-_clean: $(clean_files) $(clean-dirs) $(subdir-real)
+_clean: $(clean_files) $(clean_dirs) $(subdir_real)
 
 ########################################
 # Descending clean                     #

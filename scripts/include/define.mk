@@ -166,17 +166,17 @@ build_main	:= -f $(BUILD_HOME)/main/main.mk obj
 # Shorthand for $(Q)$(MAKE) -f scripts/build_nasm.mk obj=
 # Usage:
 # $(Q)$(MAKE) $(build_nasm)=dir
-build_nasm	:= -f $(BUILD_HOME)/modules/build_nasm.mk obj
+build_nasm	:= -f $(BUILD_HOME)/modules/nasm.mk obj
 
 # Shorthand for $(Q)$(MAKE) -f scripts/build_cust.mk obj=
 # Usage:
 # $(Q)$(MAKE) $(build_cust)=dir
-build_cust	:= -f $(BUILD_HOME)/modules/build_cust.mk obj
+build_cust	:= -f $(BUILD_HOME)/modules/cust.mk obj
 
 # Shorthand for $(Q)$(MAKE) -f scripts/build_host.mk obj=
 # Usage:
 # $(Q)$(MAKE) $(build_host)=dir
-build_host	:= -f $(BUILD_HOME)/modules/build_host.mk obj
+build_host	:= -f $(BUILD_HOME)/modules/host.mk obj
 
 ###
 # Shorthand for $(Q)$(MAKE) -f scripts/clean.mk obj=
