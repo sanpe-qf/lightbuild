@@ -165,7 +165,7 @@ rule_host:
 # Start build                          #
 ########################################
 
-_build: $(rules) $(subdir-y) $(always-y) 
+_build: $(rules)
 
 ########################################
 # Descending build                     #
@@ -181,14 +181,3 @@ $(subdir-y):
 
 PHONY += FORCE 
 FORCE:
-	
-# Read all saved command lines and dependencies for the $(targets) we
-# may be building above, using $(if_changed{,_dep}). As an
-# optimization, we don't need to read them if the target does not
-# exist, we will rebuild anyway in that case.
-
-ifneq ($(cmd_files),)
-  include $(cmd_files)
-endif
-
-.PHONY: $(PHONY)

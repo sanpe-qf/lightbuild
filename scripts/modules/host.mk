@@ -131,16 +131,11 @@ $(host-cxxshlib): FORCE
 	$(call if_changed,host-cxxshlib)
 $(call multi_depend, $(host-cxxshlib), .so, -objs)
 
-
-targets += $(host-csingle)  $(host-cmulti) $(host-cobjs)\
-	   $(host-cxxmulti) $(host-cxxobjs) $(host-shared) \
-	   $(host-cshlib) $(host-cshobjs) $(host-cxxshlib) $(host-cxxshobjs)
-
 ########################################
 # Start build                          #
 ########################################
 
-_build: $(host-always-y) $(subdir-y)
+_build: $(always-y) $(subdir-y)
 
 ########################################
 # Descending build                     #

@@ -10,6 +10,10 @@ src := $(obj)
 # Include Buildsystem function
 include $(BUILD_HOME)/include/define.mk
 
+#
+# Read auto.conf if it exists, otherwise ignore
+-include $(MAKE_HOME)/include/config/auto.conf
+
 # The filename Kbuild has precedence over Makefile
 clean-dir := $(if $(filter /%,$(src)),$(src),$(MAKE_HOME)/$(src))
 clean-file := $(if $(wildcard $(clean-dir)/Kbuild),$(clean-dir)/Kbuild,$(clean-dir)/Makefile)
@@ -17,25 +21,14 @@ include $(clean-file)
 
 #
 # Include Buildsystem function
-
 include $(BUILD_HOME)/main/main_rule.mk
+
 include $(BUILD_HOME)/modules/cust_rule.mk
 include $(BUILD_HOME)/modules/host_rule.mk
 include $(BUILD_HOME)/modules/name_rule.mk
 include $(BUILD_HOME)/modules/nasm_rule.mk
 
-########################################
-# Filter sub dir                       #
-########################################
-
-#
-# filter sub ymn
-subdir-y	:= $(patsubst %/,%,$(filter %/, $(obj-y)))
-subdir-		:= $(patsubst %/,%,$(filter %/, $(obj-)))
-# Subdirectories we need to descend into
-subdir-real	:= $(sort $(subdir-y) $(subdir-m) $(subdir-))
-# Add path
-subdir-real	:= $(addprefix $(obj)/,$(subdir-ymn))
+include $(BUILD_HOME)/auxiliary/bin_rule.mk
 
 ########################################
 # Filter files                         #
@@ -51,8 +44,6 @@ clean-cmd 	:= $(wildcard $(foreach f,$(clean-y) $(clean-files),$(dir $(f)).$(not
 # directory
 clean_files	+= $(clean-y) $(clean-files) $(clean-cmd)
 
-# clean-files	:= $(filter-out %/, $(clean-files))
-
 # clean-files is given relative to the current directory, unless it
 # starts with $(objtree)/ (which means "./", so do not add "./" unless
 # you want to delete a file from the toplevel object directory).
@@ -61,7 +52,7 @@ clean_files	+= $(clean-y) $(clean-files) $(clean-cmd)
 # 		   $(filter $(objtree)/%, $(clean-files)))
 
 # same as clean-files
-clean-dirs    := $(wildcard                                               \
+clean_dirs    := $(wildcard                                               \
 		   $(addprefix $(obj)/, $(filter-out $(objtree)/%, $(clean-dirs)))    \
 		   $(filter $(objtree)/%, $(clean-dirs)))
 
@@ -70,12 +61,12 @@ clean-dirs    := $(wildcard                                               \
 ########################################
 
 quiet_cmd_clean_file   	= $(ECHO_CLEAN)	$@
-      cmd_clean_file	= rm -f $@
+      cmd_clean_file	= $(RM) -f $@
 $(clean_files): FORCE
 	$(call cmd,clean_file)
 
 quiet_cmd_clean_dir 	= $(ECHO_CLEAN_DIR) $@
-      cmd_clean_dir 	= rm -rf $(clean-dirs)
+      cmd_clean_dir 	= $(RM) -rf $(clean-dirs)
 $(clean-dirs): FORCE
 	$(call cmd,clean_dir)
 
@@ -84,13 +75,13 @@ $(clean-dirs): FORCE
 ########################################
 
 PHONY += _clean
-_clean: $(clean_files) $(clean_dirs) $(subdir_real)
+_clean: $(subdir-y) $(clean_files) $(clean_dirs)
 
 ########################################
 # Descending clean                     #
 ########################################
-PHONY += $(subdir-ymn)
-$(subdir-ymn):
+PHONY += $(subdir-y)
+$(subdir-y):
 	$(Q)$(MAKE) $(clean)=$@
 
 PHONY += FORCE 

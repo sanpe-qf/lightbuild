@@ -3,24 +3,16 @@
 # cust rule
 # ==========================================================================
 
-
 ########################################
 # Always build                         #
 ########################################
-
-# bin-always-y += foo
-# ... is a shorthand for
-# bin += foo
-# always-y  += foo
-bin 		+= $(bin-always-y)
-always-y 	+= $(bin-always-y)
 
 # cust-always-y += foo
 # ... is a shorthand for
 # cust += foo
 # always-y  += foo
 cust 		+= $(cust-always-y)
-always-y 	+= $(cust-always-y)
+cust-always += $(cust-always-y)
 
 ########################################
 # Sort files                           #
@@ -47,14 +39,22 @@ cust-objs	:= $(sort $(foreach m,$(cust),$($(m)-obj-y)))
 cust-single := $(addprefix $(obj)/,$(cust-single))
 cust-multi	:= $(addprefix $(obj)/,$(cust-multi))
 cust-objs	:= $(addprefix $(obj)/,$(cust-objs))
-always-y	:= $(addprefix $(obj)/,$(always-y))
+cust-always	:= $(addprefix $(obj)/,$(cust-always))
 
-targets += $(cust-objs) $(cust-single) $(cust-multi)
- 
+
+cust-targets	+= $(cust-objs)
+cust-targets	+= $(cust-single)
+cust-targets	+= $(cust-multi)
+targets			+= $(cust-targets)
+
+########################################
+# Always rule                          #
+########################################
+
+always-y	+= $(cust-always)
+
 ########################################
 # clean rule                           #
 ########################################
 
-clean-files += $(cust-single)
-clean-files += $(cust-multi)
-clean-files += $(cust-objs)
+clean-files += $(cust-targets)

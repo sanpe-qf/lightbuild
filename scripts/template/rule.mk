@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-2.0
 # ==========================================================================
-# host rule
+# xxx rule
 # ==========================================================================
 
 ########################################
@@ -68,33 +68,19 @@ host-cshlib		:= $(addprefix $(obj)/,$(host-cshlib))
 host-cxxshlib	:= $(addprefix $(obj)/,$(host-cxxshlib))
 host-cshobjs	:= $(addprefix $(obj)/,$(host-cshobjs))
 host-cxxshobjs	:= $(addprefix $(obj)/,$(host-cxxshobjs))
-host-always		:= $(addprefix $(obj)/,$(host-always))
-always-y		:= $(addprefix $(obj)/,$(always-y))
+host-always-y	:= $(addprefix $(obj)/,$(host-always-y))
 
-########################################
-# targets rule                         #
-########################################
-
-host-targets 	+= $(host-csingle)
-host-targets 	+= $(host-cmulti)
-host-targets 	+= $(host-shared)
-host-targets 	+= $(host-cobjs)
-host-targets 	+= $(host-cxxmulti)
-host-targets 	+= $(host-cxxobjs)
-host-targets 	+= $(host-cshlib)
-host-targets 	+= $(host-cxxshlib)
-host-targets 	+= $(host-cshobjs)
-host-targets 	+= $(host-cxxshobjs)
-targets			+= $(host-targets)
-
-########################################
-# Always rule                          #
-########################################
-
-always-y	+= $(host-always)
+targets 	+= $(host-csingle)
+targets 	+= $(host-cmulti)
+targets 	+= $(host-shared)
+targets 	+= $(host-cobjs)
+targets 	+= $(host-cxxmulti)
+targets 	+= $(host-cxxobjs)
+targets 	+= $(host-cshlib)
+targets 	+= $(host-cxxshlib)
+targets 	+= $(host-cshobjs)
+targets 	+= $(host-cxxshobjs)
 
 ########################################
 # clean rule                           #
 ########################################
-
-clean-files += $(host-targets)

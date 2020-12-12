@@ -3,29 +3,27 @@
 # main rule
 # ==========================================================================
 
-########################################
-# Filter file                          #
-########################################
+subdir-y		:= $(obj-y) $(subdir-y)
+subdir-y		:= $(strip $(sort $(subdir-y)))
+subdir-y		:= $(filter %/, $(subdir-y))
+subdir-y		:= $(patsubst %/,%,$(subdir-y))
 
-obj-file-y		:= $(filter-out $(subdir-y),$(obj-y))
+obj-file	:= $(filter-out %/, $(obj-y))
 
-########################################
-# Sort file                            #
-########################################
+obj-subfile	:= $(filter %/, $(obj-y))
+obj-subfile	:= $(patsubst %/, %/built-in.o, $(obj-subfile))
 
 #
 # Sort file
-obj-file-y		:= $(sort $(obj-file-y))
-extra-y			:= $(sort $(extra-y))
-lib-y			:= $(sort $(lib-y))
+# obj-file-y		:= $(sort $(obj-file-y))
+# extra-y			:= $(sort $(extra-y))
+# lib-y			:= $(sort $(lib-y))
 
-obj-file-y		:= $(patsubst %/, %/built-in.o, $(obj-file-y))
+# obj-file-y		:= $(patsubst %/, %/built-in.o, $(obj-file-y))
 
-#
-# Add file
-obj-file-y		:= $(addprefix $(obj)/,$(obj-file-y))
-extra-y			:= $(addprefix $(obj)/,$(extra-y))
-lib-y			:= $(addprefix $(obj)/,$(lib-y))
+
+# extra-y			:= $(addprefix $(obj)/,$(extra-y))
+# lib-y			:= $(addprefix $(obj)/,$(lib-y))
 
 # # Libraries are always collected in one lib file.
 # # Filter out objects already built-in
@@ -44,8 +42,35 @@ lib-y			:= $(addprefix $(obj)/,$(lib-y))
 # # Replace multi-part objects by their individual parts, look at local dir only
 # real-objs-y := $(foreach m, $(filter-out $(subdir-obj-y), $(obj-y)), $(if $(strip $($(m:.o=-objs)) $($(m:.o=-y))),$($(m:.o=-objs)) $($(m:.o=-y)),$(m))) $(extra-y)
 
-ifneq ($(strip $(obj-y) $(obj-m) $(obj-) $(subdir-m) $(lib-target)),)
+ifneq ($(strip $(obj-y) $(obj-) $(subdir-m) $(lib-target)),)
 builtin-target := $(obj)/built-in.o
-always-y += $(builtin-target)
 endif
 
+########################################
+# Add path                             #
+########################################
+
+subdir-y		:= $(addprefix $(obj)/,$(subdir-y))
+obj-file		:= $(addprefix $(obj)/,$(obj-file))
+obj-subfile		:= $(addprefix $(obj)/,$(obj-subfile))
+
+########################################
+# targets rule                         #
+########################################
+
+main-targets	+= $(obj-file)
+main-targets	+= $(builtin-target)
+main-targets 	+= $(lib-target)
+targets			+= $(main-targets)
+
+########################################
+# Always rule                          #
+########################################
+
+always-y	+= $(builtin-target)
+
+########################################
+# clean rule                           #
+########################################
+
+clean-files += $(main-targets)

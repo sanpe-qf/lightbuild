@@ -52,7 +52,7 @@ cust_ld_flags	:= $(include_file) $(cust-ldflags-y)
 # Start rule                           #
 ########################################
 
-include $(BUILD_HOME)/auxiliary/build_bin.mk
+include $(BUILD_HOME)/auxiliary/bin.mk
 
 # Create executable from a single .c file
 # host-csingle -> Executable
@@ -112,7 +112,7 @@ $(obj)/%.o: $(src)/%.S FORCE
 # Start build                          #
 ########################################
 
-_build: $(always-y) $(subdir-y)
+_build: $(subdir-y) $(always-y)
 
 ########################################
 # Descending build                     #

@@ -11,7 +11,6 @@
 # are not supported by all versions of the compiler
 # ==========================================================================
 
-ifdef BUILD_ENABLE_EXTRA_GCC_CHECKS
 warning-  := $(empty)
 
 warning-1 := -Wextra -Wunused -Wno-unused-parameter
@@ -46,11 +45,8 @@ warning := $(warning-$(findstring 1, $(BUILD_ENABLE_EXTRA_GCC_CHECKS)))
 warning += $(warning-$(findstring 2, $(BUILD_ENABLE_EXTRA_GCC_CHECKS)))
 warning += $(warning-$(findstring 3, $(BUILD_ENABLE_EXTRA_GCC_CHECKS)))
 
-ifeq ("$(strip $(warning))","")
-        $(error W=$(KBUILD_ENABLE_EXTRA_GCC_CHECKS) is unknown)
-endif
+# ifeq ("$(strip $(warning))","")
+#         $(error W=$(KBUILD_ENABLE_EXTRA_GCC_CHECKS) is unknown)
+# endif
 
 KBUILD_CFLAGS += $(warning)
-
-endif #BUILD_ENABLE_EXTRA_GCC_CHECKS
- 

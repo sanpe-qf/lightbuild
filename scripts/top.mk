@@ -197,7 +197,7 @@ help:
 
 PHONY += $(remake_fun) remake
 
-remake_fun += build clean mrproper distclean
+remake_fun += build env clean mrproper distclean
 
 $(remake_fun): remake
 remake:FORCE

@@ -9,7 +9,7 @@
 
 #
 # Gcc toolchain
-AS			:= $(CROSS_COMPILE)as
+AS			:= $(CROSS_COMPILE)gcc
 LD			:= $(CROSS_COMPILE)ld
 CC			:= $(CROSS_COMPILE)gcc
 CPP			:= $(CROSS_COMPILE)cpp
@@ -19,6 +19,7 @@ STRIP		:= $(CROSS_COMPILE)strip
 OBJCOPY		:= $(CROSS_COMPILE)objcopy
 OBJDUMP		:= $(CROSS_COMPILE)objdump
 
+export CROSS_COMPILE CC
 #
 # clang toolchain
 
@@ -33,7 +34,7 @@ NASM			:= nasm
 # Rust toolchain
 
 #
-# Gcc toolchain
+# Cust toolchain
 CUST_CPP		:= $(CROSS_COMPILE)cpp
 CUST_CC			:= $(CROSS_COMPILE)gcc
 CUST_AS			:= $(CROSS_COMPILE)as
@@ -148,10 +149,10 @@ ECHO_CHECK		:= \e[5m\e[33mCHECK\e[0m
 # $(Q)$(MAKE) $(build)=dir
 remake		:= -f $(BUILD_HOME)/remake.mk obj
 
-# Shorthand for $(Q)$(MAKE) -f scripts/init_build.mk obj=
+# Shorthand for $(Q)$(MAKE) -f scripts/env.mk obj=
 # Usage:
 # $(Q)$(MAKE) $(build)=dir
-init		:= -f $(BUILD_HOME)/init_build.mk obj
+env			:= -f $(BUILD_HOME)/env.mk obj
 
 # Shorthand for $(Q)$(MAKE) -f scripts/build.mk obj=
 # Usage:
@@ -268,10 +269,10 @@ baseprereq = $(basename $(notdir $<))
 
 ###
 # Escape single quote for use in echo statements
-escsq = $(subst $(squote),'\$(squote)',$1)
+escsq	= $(subst $(squote),'\$(squote)',$1)
 
 # Find all -I options and call addtree
-flags = $(foreach o,$($(1)),$(if $(filter -I%,$(o)),$(call addtree,$(o)),$(o)))
+flags	= $(foreach o,$($(1)),$(if $(filter -I%,$(o)),$(call addtree,$(o)),$(o)))
 
 ###
 # Easy method for doing a status message
@@ -354,12 +355,7 @@ TMPOUT := $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/)
 
 # Check if both commands are the same including their order. Result is empty
 # string if equal. User may override this check using make KBUILD_NOCMDDEP=1
-ifneq ($(KBUILD_NOCMDDEP),1)
-cmd-check = $(filter-out $(subst $(space),$(space_escape),$(strip $(cmd_$@))), \
-                         $(subst $(space),$(space_escape),$(strip $(cmd_$1))))
-else
 cmd-check = $(if $(strip $(cmd_$@)),,1)
-endif
 
 # Find any prerequisites that are newer than target or that do not exist.
 # (This is not true for now; $? should contain any non-existent prerequisites,
@@ -374,29 +370,30 @@ newer-prereqs = $(filter-out $(PHONY),$?)
 # (needed for make)
 # Replace >'< with >'\''< to be able to enclose the whole string in '...'
 # (needed for the shell)
-make-cmd = $(call escsq,$(subst $(pound),$$(pound),$(subst $$,$$$$,$(cmd_$(1)))))
+make-cmd = $(call escsq,$(subst $(pound),$$(pound),\
+			$(subst $$,$$$$,$(cmd_$(1)))))
 
 #
 # Execute command if command has changed or prerequisite(s) are updated.
-if_changed = $(if $(strip $(newer-prereqs) $(cmd-check)),                       \
-	@set -e;                                                             \
-	$(echo-cmd) $(cmd_$(1));                                             \
+if_changed = $(if $(strip $(newer-prereqs) $(cmd-check)),\
+	$(Q)set -e;\
+	$(echo-cmd) $(cmd_$(1));\
 	printf '%s\n' 'cmd_$@ := $(make-cmd)' > $(dot-target).cmd, @:)
 
 #
 # Execute the command and also postprocess generated .d dependencies file.
-if_changed_dep = $(if $(strip $(newer-prereqs) $(cmd-check) ),              	\
-	@set -e;                                                             	\
-	$(echo-cmd) $(cmd_$(1));                                             	\
-	scripts/basic/fixdep $(depfile) $@ '$(make-cmd)' > $(dot-target).tmp;	\
-	rm -f $(depfile);                                                    	\
+if_changed_dep = $(if $(strip $(newer-prereqs) $(cmd-check) ),\
+	$(Q)set -e;\
+	$(echo-cmd) $(cmd_$(1));\
+	$(BUILD_HOME)/basic/fixdep $(depfile) $@ '$(make-cmd)' > $(dot-target).tmp;\
+	rm -f $(depfile);\
 	mv -f $(dot-target).tmp $(dot-target).cmd)
 
 # Usage: $(call if_changed_rule,foo)
 # Will check if $(cmd_foo) or any of the prerequisites changed,
 # and if so will execute $(rule_foo).
-if_changed_rule = $(if $(strip $(newer-prereqs) $(cmd-check) ),                 \
-	@set -e;                                                             \
+if_changed_rule = $(if $(strip $(newer-prereqs) $(cmd-check) ),\
+	$(Q)set -e;\
 	$(rule_$(1)), @:)
 
 #########################################
