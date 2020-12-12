@@ -57,25 +57,6 @@ endif
 # Always build                         #
 ########################################
 
-# elf-always-y += foo
-# ... is a shorthand for
-# elf += foo
-# always-y  += foo
-elf 		+= $(elf-always-y)
-always-y 	+= $(elf-always-y)
-
-# lib-always-y += foo
-# ... is a shorthand for
-# lib += foo
-# always-y  += foo
-lib 		+= $(lib-always-y)
-
-# bin-always-y += foo
-# ... is a shorthand for
-# bin += foo
-# always-y  += foo
-bin 		+= $(bin-always-y)
-
 # nasm-always-y += foo
 # ... is a shorthand for
 # nasm += foo
@@ -91,24 +72,6 @@ cust 		+= $(cust-always-y)
 # hostprogs += foo
 hostprogs 	+= $(hostprogs-always-y)
 
-always-y	:= $(addprefix $(obj)/,$(always-y))
-targets 	+= $(always-y)
-
-########################################
-# filter subdir                        #
-########################################
-
-#
-# filter subdir 
-subdir-y		:= $(obj-y) $(subdir-y)
-subdir-y		:= $(strip $(sort $(subdir-y)))
-subdir-y		:= $(filter %/, $(subdir-y))
-subdir-y		:= $(patsubst %/,%,$(subdir-y))
-subdir-y		:= $(addprefix $(obj)/,$(subdir-y))
-
-export SUBDIR_ASFLAGS := $(SUBDIR_ASFLAGS) $(subdir-asflags-y)
-export SUBDIR_CCFLAGS := $(SUBDIR_CCFLAGS) $(subdir-ccflags-y)
-
 ########################################
 # basic rule                           #
 ########################################
@@ -121,6 +84,19 @@ endif
 # Independent rules: assembly to bin
 rule_main:
 	$(Q)$(MAKE) $(build_main)=$(obj)
+
+########################################
+# lib rule                             #
+########################################
+
+ifneq ($(lib-y),)
+rules += rule_lib
+endif
+
+#
+# Independent rules: assembly to bin
+rule_lib:
+	$(Q)$(MAKE) $(build_lib)=$(obj)
 
 ########################################
 # Nasm Module                          #

@@ -1,0 +1,23 @@
+config BUILD_AUX
+    bool "build aux modules"
+    default y
+    
+config BUILD_CUST
+    bool "build cust modules"
+    default y
+    
+config BUILD_HOST
+    bool "build host modules"
+    default y
+    
+config BUILD_LIB
+    bool "build lib modules"
+    default y
+    
+config BUILD_MAIN
+bool "build main modules"
+default y
+    
+config BUILD_NASM
+    bool "build nasm modules"
+    default y

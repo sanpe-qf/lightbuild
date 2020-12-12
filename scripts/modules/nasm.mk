@@ -23,13 +23,15 @@ include $(build-file)
 
 #
 # Include host rule
-include $(BUILD_HOME)/modules/host_rule.mk
+include $(BUILD_HOME)/modules/nasm_rule.mk
 
 ########################################
 # NASM options                         #
 ########################################
 
-nasm_flags += -I $(src) $(INCLUDE)
+include_file := $(addprefix -I ,$(INCLUDE) $(src))
+
+nasm_flags += $(include_file)
 
 ########################################
 # Start build                          #
@@ -42,11 +44,14 @@ quiet_cmd_nasm-single 	= $(ECHO_NASM)  $@
 $(nasm-single): $(obj)/%: $(src)/%.S FORCE
 	$(call if_changed,nasm-single)
 
-quiet_cmd_nasm-multi 	= $(ECHO_NASM)  $@
-      cmd_nasm-multi	= $(NASM) $(nasm_flags) -o $@ $< 
-$(nasm-multi): $(obj)/%: $(src)/%.S FORCE
-	$(call if_changed,nasm-multi)
-
+# Link an executable based on list of .o files, all plain c
+# nasm-multi -> executable
+quiet_cmd_host-cmulti	= $(ECHO_CUSTLD) $@
+      cmd_host-cmulti	= $(CUST_LD) $(cust_ld_flags) -o $@ \
+	  					$(addprefix $(obj)/,$($(@F)-obj-y)) 
+$(nasm-multi): FORCE
+	$(call if_changed,host-cmulti)
+$(call multi_depend, $(nasm-multi), , -obj-y)
 
 ########################################
 # Start build                          #

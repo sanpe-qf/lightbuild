@@ -1,1 +1,0 @@
-project-y += main/

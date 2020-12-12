@@ -52,6 +52,10 @@ hostcxx_flags	= -Wp,-MD,$(depfile) $(__hostcxx_flags)
 # Start build                          #
 ########################################
 
+#
+# include rules: all auxiliary rule
+include $(BUILD_HOME)/include/auxiliary.mk
+
 # Create executable from a single .c file
 # host-csingle -> Executable
 quiet_cmd_host-csingle 	= $(ECHO_HOSTCC)  $@

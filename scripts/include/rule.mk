@@ -1,20 +1,16 @@
 # SPDX-License-Identifier: GPL-2.0
 # ==========================================================================
-# Always build 
+# All rule 
 # ==========================================================================
 
-
-result 	+= $(obj-y)
-
-result 	+= $(elf-always-y)
-result 	+= $(lib-always-y)
-result 	+= $(bin-always-y)
-result 	+= $(nasm-always-y)
-result 	+= $(cust-always-y)
-result 	+= $(hostprogs-always-y)
-result	+= $(host-csingle)  $(host-cmulti) $(host-cobjs)\
-	   $(host-cxxmulti) $(host-cxxobjs) $(host-shared) \
-	   $(host-cshlib) $(host-cshobjs) $(host-cxxshlib) $(host-cxxshobjs)
-result 	+= $(always-y)
+include $(BUILD_HOME)/auxiliary/bin_rule.mk
+include $(BUILD_HOME)/auxiliary/dump_rule.mk
+include $(BUILD_HOME)/auxiliary/elf_rule.mk
+include $(BUILD_HOME)/modules/cust_rule.mk
+include $(BUILD_HOME)/modules/host_rule.mk
+include $(BUILD_HOME)/modules/name_rule.mk
+include $(BUILD_HOME)/modules/nasm_rule.mk
+include $(BUILD_HOME)/main/lib_rule.mk
+include $(BUILD_HOME)/main/main_rule.mk
 
 

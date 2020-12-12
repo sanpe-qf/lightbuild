@@ -19,7 +19,6 @@ STRIP		:= $(CROSS_COMPILE)strip
 OBJCOPY		:= $(CROSS_COMPILE)objcopy
 OBJDUMP		:= $(CROSS_COMPILE)objdump
 
-export CROSS_COMPILE CC
 #
 # clang toolchain
 
@@ -116,14 +115,14 @@ ECHO_AS			:= \e[32mAS\e[0m
 ECHO_AR			:= \e[32mAR\e[0m
 ECHO_LD			:= \e[35mLD\e[0m
 
-ECHO_CUSTCPP	:= \e[32mCUSTCPP\e[0m
-ECHO_CUSTAS		:= \e[32mCUSTAS\e[0m
-ECHO_CUSTCC		:= \e[32mCUSTCC\e[0m
-ECHO_CUSTCXX	:= \e[32mCUSTCXX\e[0m
+ECHO_CUSTCPP	:= \e[33mCUSTCPP\e[0m
+ECHO_CUSTAS		:= \e[33mCUSTAS\e[0m
+ECHO_CUSTCC		:= \e[33mCUSTCC\e[0m
+ECHO_CUSTCXX	:= \e[33mCUSTCXX\e[0m
 ECHO_CUSTLD		:= \e[35mCUSTLD\e[0m
 
-ECHO_HOSTCC		:= \e[32mHOSTCC\e[0m
-ECHO_HOSTCXX	:= \e[32mHOSTCXX\e[0m
+ECHO_HOSTCC		:= \e[33mHOSTCC\e[0m
+ECHO_HOSTCXX	:= \e[33mHOSTCXX\e[0m
 ECHO_HOSTLD		:= \e[35mHOSTLD\e[0m
 ECHO_HOSTLLD	:= \e[35mHOSTLLD\e[0m
 
@@ -159,22 +158,27 @@ env			:= -f $(BUILD_HOME)/env.mk obj
 # $(Q)$(MAKE) $(build)=dir
 build		:= -f $(BUILD_HOME)/build.mk obj
 
-# Shorthand for $(Q)$(MAKE) -f scripts/build_nasm.mk obj=
+# Shorthand for $(Q)$(MAKE) -f scripts/main/main.mk obj=
 # Usage:
 # $(Q)$(MAKE) $(build_nasm)=dir
 build_main	:= -f $(BUILD_HOME)/main/main.mk obj
 
-# Shorthand for $(Q)$(MAKE) -f scripts/build_nasm.mk obj=
+# Shorthand for $(Q)$(MAKE) -f scripts/main/lib.mk obj=
+# Usage:
+# $(Q)$(MAKE) $(build)=dir
+build_lib	:= -f $(BUILD_HOME)/main/lib.mk obj
+
+# Shorthand for $(Q)$(MAKE) -f scripts/modules/build_nasm.mk obj=
 # Usage:
 # $(Q)$(MAKE) $(build_nasm)=dir
 build_nasm	:= -f $(BUILD_HOME)/modules/nasm.mk obj
 
-# Shorthand for $(Q)$(MAKE) -f scripts/build_cust.mk obj=
+# Shorthand for $(Q)$(MAKE) -f scripts/modules/build_cust.mk obj=
 # Usage:
 # $(Q)$(MAKE) $(build_cust)=dir
 build_cust	:= -f $(BUILD_HOME)/modules/cust.mk obj
 
-# Shorthand for $(Q)$(MAKE) -f scripts/build_host.mk obj=
+# Shorthand for $(Q)$(MAKE) -f scripts/modules/build_host.mk obj=
 # Usage:
 # $(Q)$(MAKE) $(build_host)=dir
 build_host	:= -f $(BUILD_HOME)/modules/host.mk obj

@@ -34,7 +34,7 @@ project		:= $(addprefix $(obj)/,$(project))
 # include dirs                         #
 ########################################
 
-INCLUDE		+= $(addprefix $(obj)/,$(projrct-include-y))
+INCLUDE		+= $(addprefix $(obj)/,$(project-include-y))
 export INCLUDE
 
 ########################################

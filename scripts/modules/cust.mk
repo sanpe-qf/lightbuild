@@ -8,9 +8,6 @@ src := $(obj)
 PHONY := _build
 _build:
 
-#
-# Include Buildsystem function
-include $(BUILD_HOME)/include/define.mk
 
 #
 # Read auto.conf if it exists, otherwise ignore
@@ -21,6 +18,10 @@ include $(BUILD_HOME)/include/define.mk
 build-dir := $(if $(filter /%,$(src)),$(src),$(MAKE_HOME)/$(src))
 build-file := $(if $(wildcard $(build-dir)/Kbuild),$(build-dir)/Kbuild,$(build-dir)/Makefile)
 include $(build-file)
+
+#
+# Include Buildsystem function
+include $(BUILD_HOME)/include/define.mk
 
 #
 # Include cust rule
@@ -52,22 +53,24 @@ cust_ld_flags	:= $(include_file) $(cust-ldflags-y)
 # Start rule                           #
 ########################################
 
-include $(BUILD_HOME)/auxiliary/bin.mk
+#
+# include rules: all auxiliary rule
+include $(BUILD_HOME)/include/auxiliary.mk
 
 # Create executable from a single .c file
-# host-csingle -> Executable
+# cust-csingle -> Executable
 quiet_cmd_cust-csingle 	= $(ECHO_CUSTCC) $@
       cmd_cust-csingle	= $(CUST_CC) $(cust_c_flags) -o $@ $<
 $(cust-single): $(obj)/%: $(src)/%.c FORCE
-	$(call if_changed,host-csingle)
+	$(call if_changed,cust-csingle)
 
 # Link an executable based on list of .o files, all plain c
-# host-cmulti -> executable
-quiet_cmd_host-cmulti	= $(ECHO_CUSTLD) $@
-      cmd_host-cmulti	= $(CUST_LD) $(cust_ld_flags) -o $@ \
+# cust-multi -> executable
+quiet_cmd_cust-cmulti	= $(ECHO_CUSTLD) $@
+      cmd_cust-cmulti	= $(CUST_LD) $(cust_ld_flags) -o $@ \
 	  					$(addprefix $(obj)/,$($(@F)-obj-y)) 
 $(cust-multi): FORCE
-	$(call if_changed,host-cmulti)
+	$(call if_changed,cust-cmulti)
 $(call multi_depend, $(cust-multi), , -obj-y)
 
 #

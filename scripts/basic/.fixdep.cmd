@@ -1,8 +1,8 @@
-cmd_/disk/d/code/product/lightcore/scripts/basic/fixdep := gcc -Wp,-MD,/disk/d/code/product/lightcore/scripts/basic/.fixdep.d      -o /disk/d/code/product/lightcore/scripts/basic/fixdep /disk/d/code/product/lightcore/scripts/basic/fixdep.c  
+cmd_/disk/d/code/product/light-build/scripts/basic/fixdep :=  gcc -Wp,-MD,/disk/d/code/product/light-build/scripts/basic/.fixdep.d      -o /disk/d/code/product/light-build/scripts/basic/fixdep /disk/d/code/product/light-build/scripts/basic/fixdep.c  
 
-source_/disk/d/code/product/lightcore/scripts/basic/fixdep := /disk/d/code/product/lightcore/scripts/basic/fixdep.c
+source_/disk/d/code/product/light-build/scripts/basic/fixdep := /disk/d/code/product/light-build/scripts/basic/fixdep.c
 
-deps_/disk/d/code/product/lightcore/scripts/basic/fixdep := \
+deps_/disk/d/code/product/light-build/scripts/basic/fixdep := \
     $(wildcard include/config/his/driver.h) \
     $(wildcard include/config/my/option.h) \
     $(wildcard include/config/foo.h) \
@@ -75,6 +75,6 @@ deps_/disk/d/code/product/lightcore/scripts/basic/fixdep := \
   /usr/include/bits/stdio_lim.h \
   /usr/include/ctype.h \
 
-/disk/d/code/product/lightcore/scripts/basic/fixdep: $(deps_/disk/d/code/product/lightcore/scripts/basic/fixdep)
+/disk/d/code/product/light-build/scripts/basic/fixdep: $(deps_/disk/d/code/product/light-build/scripts/basic/fixdep)
 
-$(deps_/disk/d/code/product/lightcore/scripts/basic/fixdep):
+$(deps_/disk/d/code/product/light-build/scripts/basic/fixdep):

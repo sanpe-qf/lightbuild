@@ -21,14 +21,7 @@ include $(clean-file)
 
 #
 # Include Buildsystem function
-include $(BUILD_HOME)/main/main_rule.mk
-
-include $(BUILD_HOME)/modules/cust_rule.mk
-include $(BUILD_HOME)/modules/host_rule.mk
-include $(BUILD_HOME)/modules/name_rule.mk
-include $(BUILD_HOME)/modules/nasm_rule.mk
-
-include $(BUILD_HOME)/auxiliary/bin_rule.mk
+include $(BUILD_HOME)/include/rule.mk
 
 ########################################
 # Filter files                         #
