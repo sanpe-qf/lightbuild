@@ -1,10 +1,10 @@
-cmd_/disk/d/code/product/light-build/scripts/kconfig/lxdialog/inputbox.o :=  gcc -Wp,-MD,/disk/d/code/product/light-build/scripts/kconfig/lxdialog/.inputbox.o.d     -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=600 -c -o /disk/d/code/product/light-build/scripts/kconfig/lxdialog/inputbox.o /disk/d/code/product/light-build/scripts/kconfig/lxdialog/inputbox.c
+cmd_/disk/d/code/product/lightcore/scripts/kconfig/lxdialog/inputbox.o :=  gcc -Wp,-MD,/disk/d/code/product/lightcore/scripts/kconfig/lxdialog/.inputbox.o.d     -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=600 -c -o /disk/d/code/product/lightcore/scripts/kconfig/lxdialog/inputbox.o /disk/d/code/product/lightcore/scripts/kconfig/lxdialog/inputbox.c
 
-source_/disk/d/code/product/light-build/scripts/kconfig/lxdialog/inputbox.o := /disk/d/code/product/light-build/scripts/kconfig/lxdialog/inputbox.c
+source_/disk/d/code/product/lightcore/scripts/kconfig/lxdialog/inputbox.o := /disk/d/code/product/lightcore/scripts/kconfig/lxdialog/inputbox.c
 
-deps_/disk/d/code/product/light-build/scripts/kconfig/lxdialog/inputbox.o := \
+deps_/disk/d/code/product/lightcore/scripts/kconfig/lxdialog/inputbox.o := \
   /usr/include/stdc-predef.h \
-  /disk/d/code/product/light-build/scripts/kconfig/lxdialog/dialog.h \
+  /disk/d/code/product/lightcore/scripts/kconfig/lxdialog/dialog.h \
   /usr/include/sys/types.h \
   /usr/include/features.h \
   /usr/include/sys/cdefs.h \
@@ -85,6 +85,6 @@ deps_/disk/d/code/product/light-build/scripts/kconfig/lxdialog/inputbox.o := \
   /usr/include/unctrl.h \
   /usr/include/curses.h \
 
-/disk/d/code/product/light-build/scripts/kconfig/lxdialog/inputbox.o: $(deps_/disk/d/code/product/light-build/scripts/kconfig/lxdialog/inputbox.o)
+/disk/d/code/product/lightcore/scripts/kconfig/lxdialog/inputbox.o: $(deps_/disk/d/code/product/lightcore/scripts/kconfig/lxdialog/inputbox.o)
 
-$(deps_/disk/d/code/product/light-build/scripts/kconfig/lxdialog/inputbox.o):
+$(deps_/disk/d/code/product/lightcore/scripts/kconfig/lxdialog/inputbox.o):

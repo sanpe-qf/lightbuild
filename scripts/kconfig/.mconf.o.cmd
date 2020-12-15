@@ -1,8 +1,8 @@
-cmd_/disk/d/code/product/light-build/scripts/kconfig/mconf.o :=  gcc -Wp,-MD,/disk/d/code/product/light-build/scripts/kconfig/.mconf.o.d     -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=600 -c -o /disk/d/code/product/light-build/scripts/kconfig/mconf.o /disk/d/code/product/light-build/scripts/kconfig/mconf.c
+cmd_/disk/d/code/product/lightcore/scripts/kconfig/mconf.o :=  gcc -Wp,-MD,/disk/d/code/product/lightcore/scripts/kconfig/.mconf.o.d     -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=600 -c -o /disk/d/code/product/lightcore/scripts/kconfig/mconf.o /disk/d/code/product/lightcore/scripts/kconfig/mconf.c
 
-source_/disk/d/code/product/light-build/scripts/kconfig/mconf.o := /disk/d/code/product/light-build/scripts/kconfig/mconf.c
+source_/disk/d/code/product/lightcore/scripts/kconfig/mconf.o := /disk/d/code/product/lightcore/scripts/kconfig/mconf.c
 
-deps_/disk/d/code/product/light-build/scripts/kconfig/mconf.o := \
+deps_/disk/d/code/product/lightcore/scripts/kconfig/mconf.o := \
   /usr/include/stdc-predef.h \
   /usr/include/ctype.h \
   /usr/include/features.h \
@@ -97,9 +97,9 @@ deps_/disk/d/code/product/light-build/scripts/kconfig/mconf.o := \
   /usr/include/bits/getopt_posix.h \
   /usr/include/bits/getopt_core.h \
   /usr/include/bits/unistd_ext.h \
-  /disk/d/code/product/light-build/scripts/kconfig/lkc.h \
+  /disk/d/code/product/lightcore/scripts/kconfig/lkc.h \
     $(wildcard include/config/prefix.h) \
-  /disk/d/code/product/light-build/scripts/kconfig/expr.h \
+  /disk/d/code/product/lightcore/scripts/kconfig/expr.h \
   /usr/include/assert.h \
   /usr/include/stdio.h \
   /usr/include/bits/types/__fpos_t.h \
@@ -109,10 +109,10 @@ deps_/disk/d/code/product/light-build/scripts/kconfig/mconf.o := \
   /usr/include/bits/types/FILE.h \
   /usr/include/bits/types/struct_FILE.h \
   /usr/include/bits/stdio_lim.h \
-  /disk/d/code/product/light-build/scripts/kconfig/list.h \
+  /disk/d/code/product/lightcore/scripts/kconfig/list.h \
   /usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdbool.h \
-  /disk/d/code/product/light-build/scripts/kconfig/lkc_proto.h \
-  /disk/d/code/product/light-build/scripts/kconfig/lxdialog/dialog.h \
+  /disk/d/code/product/lightcore/scripts/kconfig/lkc_proto.h \
+  /disk/d/code/product/lightcore/scripts/kconfig/lxdialog/dialog.h \
   /usr/include/curses.h \
   /usr/include/ncurses_dll.h \
   /usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdint.h \
@@ -126,6 +126,6 @@ deps_/disk/d/code/product/light-build/scripts/kconfig/mconf.o := \
   /usr/include/unctrl.h \
   /usr/include/curses.h \
 
-/disk/d/code/product/light-build/scripts/kconfig/mconf.o: $(deps_/disk/d/code/product/light-build/scripts/kconfig/mconf.o)
+/disk/d/code/product/lightcore/scripts/kconfig/mconf.o: $(deps_/disk/d/code/product/lightcore/scripts/kconfig/mconf.o)
 
-$(deps_/disk/d/code/product/light-build/scripts/kconfig/mconf.o):
+$(deps_/disk/d/code/product/lightcore/scripts/kconfig/mconf.o):

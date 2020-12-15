@@ -68,13 +68,14 @@ $(clean-dirs): FORCE
 ########################################
 
 PHONY += _clean
-_clean: $(subdir-y) $(clean_files) $(clean_dirs)
+_clean: $(clean-subdir-y) $(clean_files) $(clean_dirs)
 
 ########################################
 # Descending clean                     #
 ########################################
-PHONY += $(subdir-y)
-$(subdir-y):
+
+PHONY += $(clean-subdir-y)
+$(clean-subdir-y):
 	$(Q)$(MAKE) $(clean)=$@
 
 PHONY += FORCE 

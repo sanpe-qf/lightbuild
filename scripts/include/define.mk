@@ -127,7 +127,7 @@ ECHO_HOSTLD		:= \e[35mHOSTLD\e[0m
 ECHO_HOSTLLD	:= \e[35mHOSTLLD\e[0m
 
 ECHO_NASM		:= \e[34mNASM\e[0m
-
+ECHO_ELF		:= \e[34mMKELF\e[0m
 ECHO_BIN		:= \e[34mMKBIN\e[0m
 
 ECHO_RM			:= \e[31mRM\e[0m

@@ -1,8 +1,8 @@
-cmd_/disk/d/code/product/light-build/scripts/kconfig/zconf.tab.o :=  gcc -Wp,-MD,/disk/d/code/product/light-build/scripts/kconfig/.zconf.tab.o.d     -I/disk/d/code/product/light-build/scripts/kconfig -c -o /disk/d/code/product/light-build/scripts/kconfig/zconf.tab.o /disk/d/code/product/light-build/scripts/kconfig/zconf.tab.c
+cmd_/disk/d/code/product/lightcore/scripts/kconfig/zconf.tab.o :=  gcc -Wp,-MD,/disk/d/code/product/lightcore/scripts/kconfig/.zconf.tab.o.d     -I/disk/d/code/product/lightcore/scripts/kconfig -c -o /disk/d/code/product/lightcore/scripts/kconfig/zconf.tab.o /disk/d/code/product/lightcore/scripts/kconfig/zconf.tab.c
 
-source_/disk/d/code/product/light-build/scripts/kconfig/zconf.tab.o := /disk/d/code/product/light-build/scripts/kconfig/zconf.tab.c
+source_/disk/d/code/product/lightcore/scripts/kconfig/zconf.tab.o := /disk/d/code/product/lightcore/scripts/kconfig/zconf.tab.c
 
-deps_/disk/d/code/product/light-build/scripts/kconfig/zconf.tab.o := \
+deps_/disk/d/code/product/lightcore/scripts/kconfig/zconf.tab.o := \
   /usr/include/stdc-predef.h \
   /usr/include/ctype.h \
   /usr/include/features.h \
@@ -60,14 +60,14 @@ deps_/disk/d/code/product/light-build/scripts/kconfig/zconf.tab.o := \
   /usr/include/string.h \
   /usr/include/strings.h \
   /usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdbool.h \
-  /disk/d/code/product/light-build/scripts/kconfig/lkc.h \
+  /disk/d/code/product/lightcore/scripts/kconfig/lkc.h \
     $(wildcard include/config/prefix.h) \
-  /disk/d/code/product/light-build/scripts/kconfig/expr.h \
+  /disk/d/code/product/lightcore/scripts/kconfig/expr.h \
   /usr/include/assert.h \
-  /disk/d/code/product/light-build/scripts/kconfig/list.h \
-  /disk/d/code/product/light-build/scripts/kconfig/lkc_proto.h \
-  /disk/d/code/product/light-build/scripts/kconfig/kconf_id.c \
-  /disk/d/code/product/light-build/scripts/kconfig/zconf.lex.c \
+  /disk/d/code/product/lightcore/scripts/kconfig/list.h \
+  /disk/d/code/product/lightcore/scripts/kconfig/lkc_proto.h \
+  /disk/d/code/product/lightcore/scripts/kconfig/kconf_id.c \
+  /disk/d/code/product/lightcore/scripts/kconfig/zconf.lex.c \
   /usr/include/errno.h \
   /usr/include/bits/errno.h \
   /usr/include/linux/errno.h \
@@ -93,8 +93,8 @@ deps_/disk/d/code/product/light-build/scripts/kconfig/zconf.tab.o := \
   /usr/include/bits/getopt_posix.h \
   /usr/include/bits/getopt_core.h \
   /usr/include/bits/unistd_ext.h \
-  /disk/d/code/product/light-build/scripts/kconfig/util.c \
-  /disk/d/code/product/light-build/scripts/kconfig/confdata.c \
+  /disk/d/code/product/lightcore/scripts/kconfig/util.c \
+  /disk/d/code/product/lightcore/scripts/kconfig/confdata.c \
   /usr/include/sys/stat.h \
   /usr/include/bits/stat.h \
   /usr/include/fcntl.h \
@@ -104,14 +104,14 @@ deps_/disk/d/code/product/light-build/scripts/kconfig/zconf.tab.o := \
   /usr/include/bits/time.h \
   /usr/include/bits/types/struct_tm.h \
   /usr/include/bits/types/struct_itimerspec.h \
-  /disk/d/code/product/light-build/scripts/kconfig/expr.c \
-  /disk/d/code/product/light-build/scripts/kconfig/symbol.c \
+  /disk/d/code/product/lightcore/scripts/kconfig/expr.c \
+  /disk/d/code/product/lightcore/scripts/kconfig/symbol.c \
   /usr/include/regex.h \
   /usr/include/sys/utsname.h \
   /usr/include/bits/utsname.h \
-  /disk/d/code/product/light-build/scripts/kconfig/menu.c \
-  /disk/d/code/product/light-build/scripts/kconfig/preprocess.c \
+  /disk/d/code/product/lightcore/scripts/kconfig/menu.c \
+  /disk/d/code/product/lightcore/scripts/kconfig/preprocess.c \
 
-/disk/d/code/product/light-build/scripts/kconfig/zconf.tab.o: $(deps_/disk/d/code/product/light-build/scripts/kconfig/zconf.tab.o)
+/disk/d/code/product/lightcore/scripts/kconfig/zconf.tab.o: $(deps_/disk/d/code/product/lightcore/scripts/kconfig/zconf.tab.o)
 
-$(deps_/disk/d/code/product/light-build/scripts/kconfig/zconf.tab.o):
+$(deps_/disk/d/code/product/lightcore/scripts/kconfig/zconf.tab.o):

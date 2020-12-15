@@ -85,7 +85,7 @@ $(builtin-target): $(obj-file) $(obj-subfile) FORCE
 # Start build                          #
 ########################################
 
-_build: $(always-y) $(subdir-y) 
+_build:  $(subdir-y) $(always-y)
 
 ########################################
 # Descending build                     #

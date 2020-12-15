@@ -3,10 +3,10 @@
 # main rule
 # ==========================================================================
 
-subdir-y		:= $(lib-y) $(subdir-y)
-subdir-y		:= $(strip $(sort $(subdir-y)))
-subdir-y		:= $(filter %/, $(subdir-y))
-subdir-y		:= $(patsubst %/,%,$(subdir-y))
+lib-subdir-y	:= $(lib-y) $(subdir-y)
+lib-subdir-y	:= $(strip $(sort $(lib-subdir-y)))
+lib-subdir-y	:= $(filter %/, $(lib-subdir-y))
+lib-subdir-y	:= $(patsubst %/,%,$(lib-subdir-y))
 
 lib-file	:= $(filter-out %/, $(lib-y))
 
@@ -21,7 +21,7 @@ endif
 # Add path                             #
 ########################################
 
-subdir-y		:= $(addprefix $(obj)/,$(subdir-y))
+lib-subdir-y	:= $(addprefix $(obj)/,$(lib-subdir-y))
 lib-file		:= $(addprefix $(obj)/,$(lib-file))
 lib-subfile		:= $(addprefix $(obj)/,$(lib-subfile))
 
@@ -44,3 +44,4 @@ always-y	+= $(library-target)
 ########################################
 
 clean-files += $(lib-targets)
+clean-subdir-y += $(lib-subdir-y)

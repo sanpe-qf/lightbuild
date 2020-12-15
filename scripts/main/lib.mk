@@ -73,7 +73,7 @@ $(lib-subfile):$(subdir-y)
 
 #
 # Rule to compile a set of .o files into one .a file
-quiet_cmd_link_l_target = AR	$@
+quiet_cmd_link_l_target = $(ECHO_AR)	$@
 	  cmd_link_l_target = rm -f $@; $(AR) rcs$(KBUILD_ARFLAGS) $@ $(lib-file) $(lib-subfile)
 $(library-target): $(lib-file) $(lib-subfile) FORCE
 	$(call if_changed,link_l_target)

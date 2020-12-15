@@ -1,8 +1,8 @@
-cmd_/disk/d/code/product/light-build/scripts/kconfig/conf.o :=  gcc -Wp,-MD,/disk/d/code/product/light-build/scripts/kconfig/.conf.o.d      -c -o /disk/d/code/product/light-build/scripts/kconfig/conf.o /disk/d/code/product/light-build/scripts/kconfig/conf.c
+cmd_/disk/d/code/product/lightcore/scripts/kconfig/conf.o :=  gcc -Wp,-MD,/disk/d/code/product/lightcore/scripts/kconfig/.conf.o.d      -c -o /disk/d/code/product/lightcore/scripts/kconfig/conf.o /disk/d/code/product/lightcore/scripts/kconfig/conf.c
 
-source_/disk/d/code/product/light-build/scripts/kconfig/conf.o := /disk/d/code/product/light-build/scripts/kconfig/conf.c
+source_/disk/d/code/product/lightcore/scripts/kconfig/conf.o := /disk/d/code/product/lightcore/scripts/kconfig/conf.c
 
-deps_/disk/d/code/product/light-build/scripts/kconfig/conf.o := \
+deps_/disk/d/code/product/lightcore/scripts/kconfig/conf.o := \
   /usr/include/stdc-predef.h \
   /usr/include/ctype.h \
   /usr/include/features.h \
@@ -88,14 +88,14 @@ deps_/disk/d/code/product/light-build/scripts/kconfig/conf.o := \
   /usr/include/asm/errno.h \
   /usr/include/asm-generic/errno.h \
   /usr/include/asm-generic/errno-base.h \
-  /disk/d/code/product/light-build/scripts/kconfig/lkc.h \
+  /disk/d/code/product/lightcore/scripts/kconfig/lkc.h \
     $(wildcard include/config/prefix.h) \
-  /disk/d/code/product/light-build/scripts/kconfig/expr.h \
+  /disk/d/code/product/lightcore/scripts/kconfig/expr.h \
   /usr/include/assert.h \
-  /disk/d/code/product/light-build/scripts/kconfig/list.h \
+  /disk/d/code/product/lightcore/scripts/kconfig/list.h \
   /usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include/stdbool.h \
-  /disk/d/code/product/light-build/scripts/kconfig/lkc_proto.h \
+  /disk/d/code/product/lightcore/scripts/kconfig/lkc_proto.h \
 
-/disk/d/code/product/light-build/scripts/kconfig/conf.o: $(deps_/disk/d/code/product/light-build/scripts/kconfig/conf.o)
+/disk/d/code/product/lightcore/scripts/kconfig/conf.o: $(deps_/disk/d/code/product/lightcore/scripts/kconfig/conf.o)
 
-$(deps_/disk/d/code/product/light-build/scripts/kconfig/conf.o):
+$(deps_/disk/d/code/product/lightcore/scripts/kconfig/conf.o):
