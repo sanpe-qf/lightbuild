@@ -38,6 +38,15 @@ INCLUDE		+= $(addprefix $(obj)/,$(project-include-y))
 export INCLUDE
 
 ########################################
+# Start remake                         #
+########################################
+
+PHONY += _remake
+_remake: 
+	$(Q)$(MAKE) $(submake)=$(MAKE_HOME) _clean
+	$(Q)$(MAKE) $(submake)=$(MAKE_HOME) _build
+
+########################################
 # Start build                          #
 ########################################
 
@@ -105,7 +114,7 @@ _distclean: $(project) mrproper
 
 PHONY += $(project)
 $(project): FORCE
-	$(Q)$(MAKE) $(remake)=$@ $(MAKECMDGOALS)
+	$(Q)$(MAKE) $(submake)=$@ $(MAKECMDGOALS)
 
 ########################################
 # Start FORCE                          #

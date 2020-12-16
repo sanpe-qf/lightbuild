@@ -126,6 +126,7 @@ ECHO_HOSTCXX	:= \e[33mHOSTCXX\e[0m
 ECHO_HOSTLD		:= \e[35mHOSTLD\e[0m
 ECHO_HOSTLLD	:= \e[35mHOSTLLD\e[0m
 
+ECHO_DUMP		:= \e[36mDUMP\e[0m
 ECHO_NASM		:= \e[34mNASM\e[0m
 ECHO_ELF		:= \e[34mMKELF\e[0m
 ECHO_BIN		:= \e[34mMKBIN\e[0m
@@ -143,10 +144,10 @@ ECHO_CHECK		:= \e[5m\e[33mCHECK\e[0m
 # Build tool define                    #
 ########################################
 
-# Shorthand for $(Q)$(MAKE) -f scripts/remake.mk obj=
+# Shorthand for $(Q)$(MAKE) -f scripts/submake.mk obj=
 # Usage:
 # $(Q)$(MAKE) $(build)=dir
-remake		:= -f $(BUILD_HOME)/remake.mk obj
+submake		:= -f $(BUILD_HOME)/submake.mk obj
 
 # Shorthand for $(Q)$(MAKE) -f scripts/env.mk obj=
 # Usage:

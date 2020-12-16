@@ -158,6 +158,9 @@ help:
 	$(Q)$(ECHO)  '  CC             = $(CC)             '
 	$(Q)$(ECHO)  '  CC-Version     = $(call cc-version)'
 	$(Q)$(ECHO)  ''
+	$(Q)$(ECHO)  'Auto targets:'
+	$(Q)$(ECHO)  '  remake		 - The code is automatically cleared and built'
+	$(Q)$(ECHO)  ''
 	$(Q)$(ECHO)  'Build targets:'
 	$(Q)$(ECHO)  '  build		 - Build all necessary images depending on configuration'
 	$(Q)$(ECHO)  ''
@@ -192,16 +195,16 @@ help:
 	$(Q)$(ECHO)  '		Multiple levels can be combined with W=12 or W=123'
 
 ########################################
-# Start remake                         #
+# Start submake                        #
 ########################################
 
-PHONY += $(remake_fun) remake
+PHONY += $(submake_fun) submake
 
-remake_fun += build env clean mrproper distclean
+submake_fun += remake build env clean mrproper distclean
 
-$(remake_fun): remake
-remake:FORCE
-	$(Q)$(MAKE) $(remake)=$(MAKE_HOME) $(if $(MAKECMDGOALS),_$(MAKECMDGOALS))
+$(submake_fun): submake
+submake:FORCE
+	$(Q)$(MAKE) $(submake)=$(MAKE_HOME) $(if $(MAKECMDGOALS),_$(MAKECMDGOALS))
 
 ########################################
 # Start FORCE                          #

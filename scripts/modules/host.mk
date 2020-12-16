@@ -29,24 +29,12 @@ include $(BUILD_HOME)/modules/host_rule.mk
 # HOSTCC options                       #
 ########################################
 
-#
-# Build flag
-_hostc_flags   = $(KBUILD_HOSTCFLAGS)   $(HOST_EXTRACFLAGS)   \
-                 $(HOSTCFLAGS_$(basetarget).o)
-_hostcxx_flags = $(KBUILD_HOSTCXXFLAGS) $(HOST_EXTRACXXFLAGS) \
-                 $(HOSTCXXFLAGS_$(basetarget).o)
+include_file := $(addprefix -I ,$(INCLUDE))
 
-ifeq ($(KBUILD_SRC),)
-__hostc_flags	= $(_hostc_flags)
-__hostcxx_flags	= $(_hostcxx_flags)
-else
-__hostc_flags	= -I$(obj) $(call flags,_hostc_flags)
-__hostcxx_flags	= -I$(obj) $(call flags,_hostcxx_flags)
-endif
 #
 # Add dependent file				
-hostc_flags		= -Wp,-MD,$(depfile) $(__hostc_flags)
-hostcxx_flags	= -Wp,-MD,$(depfile) $(__hostcxx_flags)
+hostc_flags		= -Wp,-MD,$(depfile) $(include_file)
+hostcxx_flags	= -Wp,-MD,$(depfile) $(include_file)
 
 ########################################
 # Start build                          #
