@@ -107,7 +107,7 @@ config: scripts_basic FORCE
 	$(Q)$(MAKE) $(build_host)=$(BUILD_HOME)/kconfig $@
 	$(Q)$(MAKE) $(build_host)=$(BUILD_HOME)/kconfig syncconfig
 
-menuconfig: FORCE
+menuconfig: scripts_basic FORCE
 	$(Q)$(MKDIR) $(config_dir)
 	$(Q)$(MAKE) $(build_host)=$(BUILD_HOME)/newconfig $@
 	$(Q)$(MAKE) $(build_host)=$(BUILD_HOME)/kconfig syncconfig
