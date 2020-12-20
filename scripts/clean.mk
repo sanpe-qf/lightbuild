@@ -37,6 +37,13 @@ clean-cmd 	:= $(wildcard $(foreach f,$(clean-y) $(clean-files),$(dir $(f)).$(not
 # directory
 clean_files	+= $(clean-y) $(clean-files) $(clean-cmd)
 
+clean-subdir-y		:= $(clean-subdir-y)
+clean-subdir-y		:= $(strip $(sort $(clean-subdir-y)))
+clean-subdir-y		:= $(filter %/, $(clean-subdir-y))
+clean-subdir-y		:= $(patsubst %/,%,$(clean-subdir-y))
+clean-subdir-y		:= $(addprefix $(obj)/,$(clean-subdir-y))
+clean-subdir		:= $(clean-subdir-y) $(clean-subdir)
+
 # clean-files is given relative to the current directory, unless it
 # starts with $(objtree)/ (which means "./", so do not add "./" unless
 # you want to delete a file from the toplevel object directory).
@@ -48,7 +55,7 @@ clean_files	+= $(clean-y) $(clean-files) $(clean-cmd)
 clean_dirs    := $(wildcard                                               \
 		   $(addprefix $(obj)/, $(filter-out $(objtree)/%, $(clean-dirs)))    \
 		   $(filter $(objtree)/%, $(clean-dirs)))
-
+		   
 ########################################
 # Start rule                           #
 ########################################
@@ -68,7 +75,7 @@ $(clean-dirs): FORCE
 ########################################
 
 PHONY += _clean
-_clean: $(clean-subdir-y) $(clean_files) $(clean_dirs)
+_clean: $(clean-subdir) $(clean_files) $(clean_dirs)
 
 ########################################
 # Descending clean                     #

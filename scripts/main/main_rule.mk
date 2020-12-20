@@ -54,4 +54,4 @@ always-y	+= $(builtin-target)
 ########################################
 
 clean-files += $(main-targets) $(obj-dis)
-clean-subdir-y += $(subdir-y) $(dis-subdir-y)
+clean-subdir += $(subdir-y) $(dis-subdir-y)

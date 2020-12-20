@@ -49,7 +49,7 @@ export INCLUDE
 ########################################
 
 PHONY += _build
-_build: $(project)
+_build: $(project) scripts_basic
 	$(Q)$(MAKE) $(build)=$(sub-dir)
 	$(call hook_build)
 
@@ -116,6 +116,24 @@ _distclean: $(project) mrproper
 		-o -name '.*.rej' -o -size 0 \
 		-o -name '*%' -o -name '.*.cmd' -o -name 'core' \) \
 		-type f -print | xargs rm -f
+
+########################################
+# Start checkstack                     #
+########################################
+
+CHECKSTACK_ARCH := $(ARCH)
+CHECKSTACK_EXE  := 
+
+_checkstack:
+	$(OBJDUMP) -d $(CHECKSTACK_EXE) | $(PERL) \
+	$(BUILD_HOME)/checkstack.pl $(CHECKSTACK_ARCH)
+
+########################################
+# Start coccicheck                     #
+########################################
+
+_coccicheck:
+	$(Q)$(SHELL) $(BUILD_HOME)/$@
 
 ########################################
 # Descending operation                 #

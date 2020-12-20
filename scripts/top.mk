@@ -88,14 +88,9 @@ include $(BUILD_HOME)/include/warn.mk
 # Tool Define  
 include $(BUILD_HOME)/include/define.mk
 
-########################################
-# Start scripts                        #
-########################################
-
-# Basic helpers built in scripts/
-PHONY += scripts_basic
-scripts_basic:
-	$(Q)$(MAKE) $(build)=$(BUILD_HOME)/basic
+#
+# fixdep tool
+include $(BUILD_HOME)/basic/fixdep.mk
 
 ########################################
 # Start config                         #
@@ -112,10 +107,10 @@ config: scripts_basic FORCE
 	$(Q)$(MAKE) $(build_host)=$(BUILD_HOME)/kconfig $@
 	$(Q)$(MAKE) $(build_host)=$(BUILD_HOME)/kconfig syncconfig
 
-# menuconfig: FORCE
-# 	$(Q)$(MKDIR) $(config_dir)
-# 	$(Q)$(MAKE) $(build_host)=$(BUILD_HOME)/newconfig $@
-# 	$(Q)$(MAKE) $(build_host)=$(BUILD_HOME)/kconfig syncconfig
+menuconfig: FORCE
+	$(Q)$(MKDIR) $(config_dir)
+	$(Q)$(MAKE) $(build_host)=$(BUILD_HOME)/newconfig $@
+	$(Q)$(MAKE) $(build_host)=$(BUILD_HOME)/kconfig syncconfig
 
 %config: scripts_basic FORCE
 	$(Q)$(MKDIR) $(config_dir)
@@ -123,22 +118,11 @@ config: scripts_basic FORCE
 	$(Q)$(MAKE) $(build_host)=$(BUILD_HOME)/kconfig syncconfig
 
 ########################################
-# Start checkstack                     #
+# clean tools                          #
 ########################################
 
-CHECKSTACK_ARCH := $(ARCH)
-CHECKSTACK_EXE  := 
-
-checkstack:
-	$(OBJDUMP) -d $(CHECKSTACK_EXE) | $(PERL) \
-	$(BUILD_HOME)/checkstack.pl $(CHECKSTACK_ARCH)
-
-########################################
-# Start coccicheck                     #
-########################################
-
-coccicheck:
-	$(Q)$(SHELL) $(BUILD_HOME)/$@
+cleantools:
+	$(Q)$(MAKE) $(clean)=$(BUILD_HOME)
 
 ########################################
 # Start version                        #
@@ -177,6 +161,7 @@ help:
 	$(Q)$(ECHO)  '  clean		  - Remove most generated files but keep the config'
 	$(Q)$(ECHO)  '  mrproper	  - Remove all generated files + config + various backup files'
 	$(Q)$(ECHO)  '  distclean	  - mrproper + remove editor backup and patch files'
+	$(Q)$(ECHO)  '  cleantools	  - Remove buildsystem tools generated files'
 	$(Q)$(ECHO)  ''
 	$(Q)$(ECHO)  'Static analysers'
 	$(Q)$(ECHO)  '  checkstack      - Generate a list of stack hogs'
@@ -200,10 +185,10 @@ help:
 
 PHONY += $(submake_fun) submake
 
-submake_fun += remake build env clean mrproper distclean
+submake_fun += remake build env clean mrproper distclean checkstack coccicheck
 
 $(submake_fun): submake
-submake:FORCE
+submake: FORCE 
 	$(Q)$(MAKE) $(submake)=$(MAKE_HOME) $(if $(MAKECMDGOALS),_$(MAKECMDGOALS))
 
 ########################################

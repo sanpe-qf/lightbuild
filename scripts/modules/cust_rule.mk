@@ -58,4 +58,4 @@ always-y	+= $(cust-always)
 ########################################
 
 clean-files += $(cust-targets)
-clean-subdir-y += $()
+clean-subdir += $()

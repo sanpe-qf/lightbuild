@@ -44,4 +44,4 @@ always-y	+= $(library-target)
 ########################################
 
 clean-files += $(lib-targets)
-clean-subdir-y += $(lib-subdir-y)
+clean-subdir += $(lib-subdir-y)
