@@ -54,6 +54,8 @@ a_flags		= -Wp,-MD,$(depfile) $(include_file) $(asflags-y)
 
 c_flags		= -Wp,-MD,$(depfile) $(include_file) $(ccflags-y)
 
+cxx_flags	= -Wp,-MD,$(depfile) $(include_file) $(cxxflags-y)
+
 cpp_flags	= -Wp,-MD,$(depfile) $(include_file) $(cppflags-y)
 
 ld_flags	= $(LDFLAGS) $(ldflags-y)

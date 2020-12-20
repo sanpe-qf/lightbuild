@@ -3,6 +3,17 @@
 # process system
 # ==========================================================================
 
+
+# Compile C++ sources (.cpp)
+# ---------------------------------------------------------------------------
+
+
+quiet_cmd_cxx_o_cpp = $(ECHO_CXX) $@
+	  cmd_cxx_o_cpp = $(CXX) $(cxx_flags) -c -o $@ $<
+$(obj)/%.o: $(src)/%.cpp FORCE
+	$(call if_changed_dep,cxx_o_cpp)
+
+
 # Compile C sources (.c)
 # ---------------------------------------------------------------------------
 
@@ -22,16 +33,6 @@ $(obj)/%.i: $(src)/%.c FORCE
 
 quiet_cmd_cc_o_c = $(ECHO_CC) $@
 	  cmd_cc_o_c = $(CC) $(c_flags) -c -o $@ $<
-
-define rule_cc_o_c
-	$(call echo-cmd,cc_o_c) $(cmd_cc_o_c);				  \
-	scripts/basic/fixdep $(depfile) $@ '$(call make-cmd,cc_o_c)' >    \
-	                                              $(dot-target).tmp;  \
-	rm -f $(depfile);						  \
-	mv -f $(dot-target).tmp $(dot-target).cmd
-endef
-
-# Built-in and composite module parts
 $(obj)/%.o: $(src)/%.c FORCE
 	$(call if_changed_dep,cc_o_c)
 
@@ -39,7 +40,6 @@ quiet_cmd_cc_lst_c = MKLST   $@
       cmd_cc_lst_c = $(CC) $(c_flags) -g -c -o $*.o $< && \
 		     $(CONFIG_SHELL) $(srctree)/scripts/makelst $*.o \
 				     System.map $(OBJDUMP) > $@
-
 $(obj)/%.lst: $(src)/%.c FORCE
 	$(call if_changed_dep,cc_lst_c)
 
@@ -53,7 +53,7 @@ $(obj)/%.s: $(src)/%.S FORCE
 	$(call if_changed_dep,as_s_S)
 
 quiet_cmd_as_o_S = $(ECHO_AS) $@
-cmd_as_o_S       = $(AS) $(a_flags) -c -o $@ $<
+	  cmd_as_o_S       = $(AS) $(a_flags) -c -o $@ $<
 
 $(obj)/%.o: $(src)/%.S FORCE
 	$(call if_changed_dep,as_o_S)

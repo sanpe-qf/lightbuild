@@ -29,12 +29,10 @@ include $(BUILD_HOME)/modules/host_rule.mk
 # HOSTCC options                       #
 ########################################
 
-include_file := $(addprefix -I ,$(INCLUDE))
-
 #
 # Add dependent file				
-hostc_flags		= -Wp,-MD,$(depfile) $(include_file)
-hostcxx_flags	= -Wp,-MD,$(depfile) $(include_file)
+hostc_flags		= -Wp,-MD,$(depfile)
+hostcxx_flags	= -Wp,-MD,$(depfile)
 
 ########################################
 # Start build                          #

@@ -24,14 +24,15 @@ elf	:= $(sort $(elf))
 # Filter files                         #
 ########################################
 
-elf-objs	:= $(sort $(foreach m,$(elf),$($(m)-obj-y)))
+elf-objs		:= $(sort $(foreach m,$(elf),$($(m)-obj-y)))
+elf-directs		:= $(sort $(foreach m,$(elf),$($(m)-direct-y)))
 
 ########################################
 # Add path                             #
 ########################################
 
 elf			:= $(addprefix $(obj)/,$(elf))
-elf-objs	:= $(addprefix $(obj)/,$(elf-objs))
+elf-objs	:= $(addprefix $(obj)/,$(elf-objs)) $(elf-directs)
 elf-always 	:= $(addprefix $(obj)/,$(elf-always))
 
 ########################################

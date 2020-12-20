@@ -30,12 +30,28 @@ project		:= $(filter %/, $(project))
 project		:= $(patsubst %/,%,$(project))
 project		:= $(addprefix $(obj)/,$(project))
 
+project-n	:= $(project-)
+project-n	:= $(strip $(sort $(project-n)))
+project-n	:= $(filter %/, $(project-n))
+project-n	:= $(patsubst %/,%,$(project-n))
+project-n	:= $(addprefix $(obj)/,$(project-n))
+
 ########################################
 # include dirs                         #
 ########################################
 
-INCLUDE		+= $(addprefix $(obj)/,$(project-include-y))
+INCLUDE		:= $(addprefix $(obj)/,$(project-include-y)) \
+				$(project-include-fix) $(INCLUDE)
 export INCLUDE
+
+########################################
+# Start build                          #
+########################################
+
+PHONY += _build
+_build: $(project)
+	$(Q)$(MAKE) $(build)=$(sub-dir)
+	$(call hook_build)
 
 ########################################
 # Start remake                         #
@@ -45,14 +61,6 @@ PHONY += _remake
 _remake: 
 	$(Q)$(MAKE) $(submake)=$(MAKE_HOME) _clean
 	$(Q)$(MAKE) $(submake)=$(MAKE_HOME) _build
-
-########################################
-# Start build                          #
-########################################
-
-PHONY += _build
-_build: $(project)
-	$(Q)$(MAKE) $(build)=$(sub-dir)
 
 ########################################
 # Start build                          #
@@ -74,8 +82,9 @@ RCS_FIND_IGNORE := \( -name SCCS -o -name BitKeeper -o \
                       -name .svn -o -name CVS -o -name .pc -o \
                       -name .hg -o -name .git \) -prune -o
 
-_clean: $(project) 
+_clean: $(project) $(project-n)
 	$(Q)$(MAKE) $(clean)=$(sub-dir)
+	$(call hook_clean)
 
 #
 # mrproper
@@ -114,6 +123,10 @@ _distclean: $(project) mrproper
 
 PHONY += $(project)
 $(project): FORCE
+	$(Q)$(MAKE) $(submake)=$@ $(MAKECMDGOALS)
+
+PHONY += $(project-n)
+$(project-n): FORCE
 	$(Q)$(MAKE) $(submake)=$@ $(MAKECMDGOALS)
 
 ########################################

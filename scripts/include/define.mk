@@ -13,12 +13,12 @@ AS			:= $(CROSS_COMPILE)gcc
 LD			:= $(CROSS_COMPILE)ld
 CC			:= $(CROSS_COMPILE)gcc
 CPP			:= $(CROSS_COMPILE)cpp
+CXX			:= $(CROSS_COMPILE)c++
 AR			:= $(CROSS_COMPILE)ar
 NM			:= $(CROSS_COMPILE)nm
 STRIP		:= $(CROSS_COMPILE)strip
 OBJCOPY		:= $(CROSS_COMPILE)objcopy
 OBJDUMP		:= $(CROSS_COMPILE)objdump
-
 #
 # clang toolchain
 
@@ -63,6 +63,10 @@ HOSTCC		 := gcc
 HOSTCXX      := c++
 HOSTCFLAGS   := -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer
 HOSTCXXFLAGS := -O2
+
+#
+# aux tools
+MKELF		 := gcc
 
 ########################################
 # CMD tool                             #
@@ -148,6 +152,11 @@ ECHO_CHECK		:= \e[5m\e[33mCHECK\e[0m
 # Usage:
 # $(Q)$(MAKE) $(build)=dir
 submake		:= -f $(BUILD_HOME)/submake.mk obj
+
+# Shorthand for $(Q)$(MAKE) -f scripts/submake.mk obj=
+# Usage:
+# $(SUBMAKE)=dir
+SUBMAKE		:= $(Q)$(MAKE) $(submake)
 
 # Shorthand for $(Q)$(MAKE) -f scripts/env.mk obj=
 # Usage:

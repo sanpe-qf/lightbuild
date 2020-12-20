@@ -25,7 +25,13 @@ include $(build-file)
 # Start include                        #
 ########################################
 
-INCLUDE		:= $(addprefix $(obj)/,$(include-y)) $(INCLUDE)
+include-file	:= $(include-y)
+include-file	:= $(strip $(sort $(include-file)))
+include-file	:= $(filter %/, $(include-file))
+include-file	:= $(patsubst %/,%,$(include-file))
+include-file	:= $(addprefix $(obj)/,$(include-file))
+
+INCLUDE			:= $(include-file) $(INCLUDE)
 export INCLUDE
 
 ########################################
