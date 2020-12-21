@@ -1,6 +1,6 @@
 deps_config := \
 	examples/Kconfig \
-	/disk/d/code/product/light-build/Kconfig
+	Kconfig
 
 include/config/auto.conf: \
 	$(deps_config)

@@ -88,10 +88,6 @@ include $(BUILD_HOME)/include/warn.mk
 # Tool Define  
 include $(BUILD_HOME)/include/define.mk
 
-#
-# fixdep tool
-include $(BUILD_HOME)/basic/fixdep.mk
-
 ########################################
 # Start config                         #
 ########################################
@@ -102,21 +98,24 @@ include $(BUILD_HOME)/basic/fixdep.mk
 config_dir := include/config configs
 config_dir := $(addprefix $(MAKE_HOME)/,$(config_dir))
 
-config: scripts_basic FORCE
+config: FORCE
+	$(Q)$(MAKE) $(basic)
 	$(Q)$(MKDIR) $(config_dir)
 	$(Q)$(MAKE) $(build_host)=$(BUILD_HOME)/kconfig $@
 	$(Q)$(MAKE) $(build_host)=$(BUILD_HOME)/kconfig syncconfig
 
-menuconfig: scripts_basic FORCE
+menuconfig: FORCE
+	$(Q)$(MAKE) $(basic)
 	$(Q)$(MKDIR) $(config_dir)
 	$(Q)$(MAKE) $(build_host)=$(BUILD_HOME)/newconfig $@
 	$(Q)$(MAKE) $(build_host)=$(BUILD_HOME)/kconfig syncconfig
 
-%config: scripts_basic FORCE
+%config: FORCE
+	$(Q)$(MAKE) $(basic)
 	$(Q)$(MKDIR) $(config_dir)
 	$(Q)$(MAKE) $(build_host)=$(BUILD_HOME)/kconfig $@
 	$(Q)$(MAKE) $(build_host)=$(BUILD_HOME)/kconfig syncconfig
-
+	
 ########################################
 # clean tools                          #
 ########################################
@@ -158,7 +157,7 @@ help:
 	$(Q)$(ECHO)  '  info		  - Build targets informatio'
 	$(Q)$(ECHO)  ''
 	$(Q)$(ECHO)  'Cleaning project:'
-	$(Q)$(ECHO)  '  clean		  - Remove most generated files but keep the config'
+	$(Q)$(ECHO)  '  clean		  - Only use rules to clean targets'
 	$(Q)$(ECHO)  '  mrproper	  - Remove all generated files + config + various backup files'
 	$(Q)$(ECHO)  '  distclean	  - mrproper + remove editor backup and patch files'
 	$(Q)$(ECHO)  '  cleantools	  - Remove buildsystem tools generated files'

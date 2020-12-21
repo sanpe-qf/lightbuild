@@ -49,7 +49,8 @@ export INCLUDE
 ########################################
 
 PHONY += _build
-_build: $(project) scripts_basic
+_build: $(project)
+	$(Q)$(MAKE) $(basic)
 	$(Q)$(MAKE) $(build)=$(sub-dir)
 	$(call hook_build)
 
@@ -88,28 +89,33 @@ _clean: $(project) $(project-n)
 
 #
 # mrproper
-PHONY += distclean
+MRPROPER_DIRS	+= include/config include/generated
+MRPROPER_FILES	+= .config .config.old tags TAGS cscope* GPATH GTAGS GRTAGS GSYMS
 
-MRPROPER_DIRS  += include/config include/generated
-MRPROPER_FILES += .config .config.old tags TAGS cscope* GPATH GTAGS GRTAGS GSYMS
+MRPROPER_DIRS	:= $(addprefix $(obj)/,$(MRPROPER_DIRS))
+MRPROPER_FILES	:= $(addprefix $(obj)/,$(MRPROPER_FILES))
 
 _mrproper: rm-dirs  := $(wildcard $(MRPROPER_DIRS))
 _mrproper: rm-files := $(wildcard $(MRPROPER_FILES))
-mrproper-dirs      := $(addprefix _mrproper_, scripts)
+_mrproper: mrproper-dirs := $(addprefix _mrproper_,$(rm-dirs) $(rm-files))
 
-PHONY += $(mrproper-dirs) mrproper
+PHONY += _mrproper $(mrproper-dirs)
 $(mrproper-dirs):
-	$(Q)$(MAKE) $(clean)=$(patsubst _mrproper_%,%,$@)
+	echo "fuck you"
+	# $(ECHO) $(ECHO_RM)	" eweae$(patsubst _mrproper_%,%,$@)"
+	# $(Q)$(MAKE) $(RM) $(patsubst _mrproper_%,%,$@)
 
-_mrproper: $(project) clean $(mrproper-dirs)
+_mrproper: $(mrproper-dirs)
+	echo "rm-dirs  $(mrproper-dirs)"
+	# $(Q)$(MAKE) $(submake)=$(MAKE_HOME) _clean
 	$(call cmd,rmdirs)
 	$(call cmd,rmfiles)
 
 # distclean
 #
-PHONY += distclean
+PHONY += _distclean
 
-_distclean: $(project) mrproper
+_distclean: $(project) _mrproper
 	$(Q)find $(srctree) $(RCS_FIND_IGNORE) \
 		\( -name '*.orig' -o -name '*.rej' -o -name '*~' \
 		-o -name '*.bak' -o -name '#*#' -o -name '.*.orig' \

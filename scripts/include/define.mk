@@ -199,6 +199,12 @@ build_host	:= -f $(BUILD_HOME)/modules/host.mk obj
 # $(Q)$(MAKE) $(clean)=dir
 clean		:= -f $(BUILD_HOME)/clean.mk obj
 
+###
+# Shorthand for $(Q)$(MAKE) -f scripts/clean.mk obj=
+# Usage:
+# $(Q)$(MAKE) $(clean)=dir
+basic		:= -f $(BUILD_HOME)/basic/fixdep.mk
+
 ########################################
 # Build option                         #
 ########################################
