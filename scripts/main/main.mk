@@ -50,13 +50,13 @@ endif
 export asflags-sub-y ccflags-sub-y cppflags-sub-y asflags-sub-y ldflags-sub-y
 
 
-a_flags		= -Wp,-MD,$(depfile) $(include_file) $(asflags-y)
+a_flags		= -Wp,-MD,$(depfile) $(include_file) $(gcc-warning) $(asflags-y)
 
-c_flags		= -Wp,-MD,$(depfile) $(include_file) $(ccflags-y)
+c_flags		= -Wp,-MD,$(depfile) $(include_file) $(gcc-warning) $(ccflags-y)
 
-cxx_flags	= -Wp,-MD,$(depfile) $(include_file) $(cxxflags-y)
+cxx_flags	= -Wp,-MD,$(depfile) $(include_file) $(gcc-warning) $(cxxflags-y)
 
-cpp_flags	= -Wp,-MD,$(depfile) $(include_file) $(cppflags-y)
+cpp_flags	= -Wp,-MD,$(depfile) $(include_file) $(gcc-warning) $(cppflags-y)
 
 ld_flags	= $(LDFLAGS) $(ldflags-y)
 

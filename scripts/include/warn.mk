@@ -41,8 +41,8 @@ warning-3 += -Wswitch-default
 warning-3 += $(call cc-option, -Wpacked-bitfield-compat)
 warning-3 += $(call cc-option, -Wvla)
 
-warning := $(warning-$(findstring 1, $(BUILD_ENABLE_EXTRA_GCC_CHECKS)))
-warning += $(warning-$(findstring 2, $(BUILD_ENABLE_EXTRA_GCC_CHECKS)))
-warning += $(warning-$(findstring 3, $(BUILD_ENABLE_EXTRA_GCC_CHECKS)))
+gcc-warning := $(warning-$(findstring 1, $(BUILD_ENABLE_EXTRA_GCC_CHECKS)))
+gcc-warning += $(warning-$(findstring 2, $(BUILD_ENABLE_EXTRA_GCC_CHECKS)))
+gcc-warning += $(warning-$(findstring 3, $(BUILD_ENABLE_EXTRA_GCC_CHECKS)))
 
 export gcc-warning

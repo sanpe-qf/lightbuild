@@ -19,18 +19,10 @@ NM			:= $(CROSS_COMPILE)nm
 STRIP		:= $(CROSS_COMPILE)strip
 OBJCOPY		:= $(CROSS_COMPILE)objcopy
 OBJDUMP		:= $(CROSS_COMPILE)objdump
-#
-# clang toolchain
-
-
 
 #
 # NASM toolchain
 NASM			:= nasm
-
-
-#
-# Rust toolchain
 
 #
 # Cust toolchain
@@ -43,8 +35,6 @@ CUST_NM			:= $(CROSS_COMPILE)nm
 CUST_STRIP		:= $(CROSS_COMPILE)strip
 CUST_OBJCOPY	:= $(CROSS_COMPILE)objcopy
 CUST_OBJDUMP	:= $(CROSS_COMPILE)objdump
-
-
 
 AS_FLAGS 		:= 
 LD_FLAGS 		:= 
@@ -75,9 +65,9 @@ MKELF		 := gcc
 #
 # CMD tool
 MKDIR			:= mkdir -p
-RMDIR			:= rmdir -p
 CP				:= cp -af
-RM				:= rm -rf
+RM				:= rm
+RMDIR			:= rm -r
 CD				:= cd
 MV				:= mv
 FIND			:= find
@@ -136,6 +126,7 @@ ECHO_ELF		:= \e[34mMKELF\e[0m
 ECHO_BIN		:= \e[34mMKBIN\e[0m
 
 ECHO_RM			:= \e[31mRM\e[0m
+ECHO_RMDIR		:= \e[31mRMDIR\e[0m
 ECHO_CLEAN		:= \e[31mCLEAN\e[0m
 ECHO_CLEAN_DIR	:= \e[31mCLEANDIR\e[0m
 

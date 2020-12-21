@@ -95,19 +95,23 @@ MRPROPER_FILES	+= .config .config.old tags TAGS cscope* GPATH GTAGS GRTAGS GSYMS
 MRPROPER_DIRS	:= $(addprefix $(obj)/,$(MRPROPER_DIRS))
 MRPROPER_FILES	:= $(addprefix $(obj)/,$(MRPROPER_FILES))
 
-_mrproper: rm-dirs  := $(wildcard $(MRPROPER_DIRS))
-_mrproper: rm-files := $(wildcard $(MRPROPER_FILES))
-_mrproper: mrproper-dirs := $(addprefix _mrproper_,$(rm-dirs) $(rm-files))
+rm-dirs  := $(wildcard $(MRPROPER_DIRS))
+rm-files := $(wildcard $(MRPROPER_FILES))
+mrproper-dirs := $(addprefix _mrproper_,$(rm-dirs))
+mrproper-files := $(addprefix _mrproper_,$(rm-files))
 
-PHONY += _mrproper $(mrproper-dirs)
+PHONY += $(mrproper-dirs) 
 $(mrproper-dirs):
-	echo "fuck you"
-	# $(ECHO) $(ECHO_RM)	" eweae$(patsubst _mrproper_%,%,$@)"
-	# $(Q)$(MAKE) $(RM) $(patsubst _mrproper_%,%,$@)
+	$(Q)$(ECHO) "  $(ECHO_RMDIR) $(patsubst _mrproper_%,%,$@)"
+	$(Q)$(RMDIR) $(patsubst _mrproper_%,%,$@)
 
-_mrproper: $(mrproper-dirs)
-	echo "rm-dirs  $(mrproper-dirs)"
-	# $(Q)$(MAKE) $(submake)=$(MAKE_HOME) _clean
+PHONY += $(mrproper-files)
+$(mrproper-files):
+	$(Q)$(ECHO) "  $(ECHO_RM) $(patsubst _mrproper_%,%,$@)"
+	$(Q)$(RM) $(patsubst _mrproper_%,%,$@)
+
+PHONY += _mrproper
+_mrproper: $(mrproper-files) $(mrproper-dirs)
 	$(call cmd,rmdirs)
 	$(call cmd,rmfiles)
 
@@ -116,7 +120,7 @@ _mrproper: $(mrproper-dirs)
 PHONY += _distclean
 
 _distclean: $(project) _mrproper
-	$(Q)find $(srctree) $(RCS_FIND_IGNORE) \
+	$(Q)find $(MAKE_HOME) \
 		\( -name '*.orig' -o -name '*.rej' -o -name '*~' \
 		-o -name '*.bak' -o -name '#*#' -o -name '.*.orig' \
 		-o -name '.*.rej' -o -size 0 \
