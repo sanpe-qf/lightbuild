@@ -111,7 +111,7 @@ $(mrproper-files):
 	$(Q)$(RM) $(patsubst _mrproper_%,%,$@)
 
 PHONY += _mrproper
-_mrproper: $(mrproper-files) $(mrproper-dirs)
+_mrproper: $(mrproper-files) $(mrproper-dirs) _clean
 	$(call cmd,rmdirs)
 	$(call cmd,rmfiles)
 

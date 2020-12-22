@@ -1,0 +1,10 @@
+#
+# Automatically generated file; DO NOT EDIT.
+# light-build
+#
+CONFIG_BUILD_AUX=y
+CONFIG_BUILD_CUST=y
+CONFIG_BUILD_HOST=y
+CONFIG_BUILD_LIB=y
+CONFIG_BUILD_MAIN=y
+CONFIG_BUILD_NASM=y

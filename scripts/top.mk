@@ -115,7 +115,7 @@ menuconfig: FORCE
 	$(Q)$(MKDIR) $(config_dir)
 	$(Q)$(MAKE) $(build_host)=$(BUILD_HOME)/kconfig $@
 	$(Q)$(MAKE) $(build_host)=$(BUILD_HOME)/kconfig syncconfig
-	
+
 ########################################
 # clean tools                          #
 ########################################
