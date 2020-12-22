@@ -31,28 +31,28 @@ include $(BUILD_HOME)/main/main_rule.mk
 
 include_file := $(addprefix -I ,$(INCLUDE))
 
-ifneq (asflags-y,)
+ifeq (asflags-y,)
 asflags-y	:= $(asflags-sub-y)
 endif
 
-ifneq (ccflags-y,)
+ifeq (ccflags-y,)
 ccflags-y	:= $(ccflags-sub-y)
 endif
 
-ifneq (cppflags-y,)
+ifeq (cppflags-y,)
 cppflags-y	:= $(cppflags-sub-y)
 endif
 
-ifneq (ldflags-y,)
+ifeq (ldflags-y,)
 ldflags-y	:= $(ldflags-sub-y)
 endif
 
 export asflags-sub-y ccflags-sub-y cppflags-sub-y asflags-sub-y ldflags-sub-y
 
 
-a_flags		= -Wp,-MD,$(depfile) $(include_file) $(gcc-warning) $(asflags-y)
+a_flags		= -Wp,-MD,$(depfile) $(include_file) $(gcc-warning) $(asflags-y) $(acflags-y) 
 
-c_flags		= -Wp,-MD,$(depfile) $(include_file) $(gcc-warning) $(ccflags-y)
+c_flags		= -Wp,-MD,$(depfile) $(include_file) $(gcc-warning) $(ccflags-y) $(acflags-y) 
 
 cxx_flags	= -Wp,-MD,$(depfile) $(include_file) $(gcc-warning) $(cxxflags-y)
 

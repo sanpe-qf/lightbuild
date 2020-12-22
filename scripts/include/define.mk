@@ -56,7 +56,7 @@ HOSTCXXFLAGS := -O2
 
 #
 # aux tools
-MKELF		 := gcc
+MKELF		 := $(CROSS_COMPILE)ld
 
 ########################################
 # CMD tool                             #

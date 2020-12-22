@@ -81,8 +81,8 @@ _clean: $(clean-subdir) $(clean_files) $(clean_dirs)
 # Descending clean                     #
 ########################################
 
-PHONY += $(clean-subdir-y)
-$(clean-subdir-y):
+PHONY += $(clean-subdir)
+$(clean-subdir):
 	$(Q)$(MAKE) $(clean)=$@
 
 PHONY += FORCE 
