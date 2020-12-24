@@ -72,7 +72,7 @@ cust += abc
 
 3. cust*规则:
    ```
-   cust += abc
+        cust += abc
 	cust-always +=
    ```
 
@@ -93,7 +93,7 @@ cust += abc
 7. host*规则:
    build
    ```
-   hostprogs +=
+        hostprogs +=
 
 	host-always +=
    ```
