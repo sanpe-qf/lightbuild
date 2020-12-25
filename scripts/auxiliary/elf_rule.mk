@@ -25,14 +25,14 @@ elf	:= $(sort $(elf))
 ########################################
 
 elf-objs		:= $(sort $(foreach m,$(elf),$($(m)-obj-y)))
-elf-directs		:= $(sort $(foreach m,$(elf),$($(m)-direct-y)))
+elf-directs		:= $(foreach m,$(elf),$($(m)-direct-y))
 
 ########################################
 # Add path                             #
 ########################################
 
 elf			:= $(addprefix $(obj)/,$(elf))
-elf-objs	:= $(addprefix $(obj)/,$(elf-objs)) $(elf-directs)
+elf-objs	:= $(addprefix $(obj)/,$(elf-objs))
 elf-always 	:= $(addprefix $(obj)/,$(elf-always))
 
 ########################################

@@ -9,54 +9,54 @@
 
 #
 # Gcc toolchain
-AS			:= $(CROSS_COMPILE)gcc
-LD			:= $(CROSS_COMPILE)ld
-CC			:= $(CROSS_COMPILE)gcc
-CPP			:= $(CROSS_COMPILE)cpp
-CXX			:= $(CROSS_COMPILE)c++
-AR			:= $(CROSS_COMPILE)ar
-NM			:= $(CROSS_COMPILE)nm
-STRIP		:= $(CROSS_COMPILE)strip
-OBJCOPY		:= $(CROSS_COMPILE)objcopy
-OBJDUMP		:= $(CROSS_COMPILE)objdump
+AS			?= $(CROSS_COMPILE)gcc
+LD			?= $(CROSS_COMPILE)ld
+CC			?= $(CROSS_COMPILE)gcc
+CPP			?= $(CROSS_COMPILE)cpp
+CXX			?= $(CROSS_COMPILE)c++
+AR			?= $(CROSS_COMPILE)ar
+NM			?= $(CROSS_COMPILE)nm
+STRIP		?= $(CROSS_COMPILE)strip
+OBJCOPY		?= $(CROSS_COMPILE)objcopy
+OBJDUMP		?= $(CROSS_COMPILE)objdump
 
 #
 # NASM toolchain
-NASM			:= nasm
+NASM			?= nasm
 
 #
 # Cust toolchain
-CUST_CPP		:= $(CROSS_COMPILE)cpp
-CUST_CC			:= $(CROSS_COMPILE)gcc
-CUST_AS			:= $(CROSS_COMPILE)as
-CUST_LD			:= $(CROSS_COMPILE)ld
-CUST_AR			:= $(CROSS_COMPILE)ar
-CUST_NM			:= $(CROSS_COMPILE)nm
-CUST_STRIP		:= $(CROSS_COMPILE)strip
-CUST_OBJCOPY	:= $(CROSS_COMPILE)objcopy
-CUST_OBJDUMP	:= $(CROSS_COMPILE)objdump
+CUST_CPP		?= $(CROSS_COMPILE)cpp
+CUST_CC			?= $(CROSS_COMPILE)gcc
+CUST_AS			?= $(CROSS_COMPILE)as
+CUST_LD			?= $(CROSS_COMPILE)ld
+CUST_AR			?= $(CROSS_COMPILE)ar
+CUST_NM			?= $(CROSS_COMPILE)nm
+CUST_STRIP		?= $(CROSS_COMPILE)strip
+CUST_OBJCOPY	?= $(CROSS_COMPILE)objcopy
+CUST_OBJDUMP	?= $(CROSS_COMPILE)objdump
 
-AS_FLAGS 		:= 
-LD_FLAGS 		:= 
-CC_FLAGS 		:= 
-CPP_FLAGS 		:= 
-AR_FLAGS 		:= 
-NM_FLAGS 		:= 
-STRIP_FLAGS 	:= 
-OBJCOPY_FLAGS	:= 
-OBJDUMP_FLAGS	:= 
-NASM_FLAGS		:=
+AS_FLAGS 		?= 
+LD_FLAGS 		?=
+CC_FLAGS 		?=
+CPP_FLAGS 		?=
+AR_FLAGS 		?=
+NM_FLAGS 		?=
+STRIP_FLAGS 	?=
+OBJCOPY_FLAGS	?=
+OBJDUMP_FLAGS	?=
+NASM_FLAGS		?=
 
 #
 # Host toolchain
-HOSTCC		 := gcc
-HOSTCXX      := c++
-HOSTCFLAGS   := -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer
-HOSTCXXFLAGS := -O2
+HOSTCC		 ?= gcc
+HOSTCXX      ?= c++
+HOSTCFLAGS   ?= -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer
+HOSTCXXFLAGS ?= -O2
 
 #
 # aux tools
-MKELF		 := $(CROSS_COMPILE)ld
+MKELF		 ?= $(CROSS_COMPILE)ld
 
 ########################################
 # CMD tool                             #

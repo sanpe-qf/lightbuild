@@ -4,9 +4,9 @@ always-y += $(bin) $(dump)
 
 bin += led.bin
 led.bin-obj-y += $(cust)
-# 
-# dump += led.dis
-# led.dis-obj-y += $(cust)
+
+dump += led.dis
+led.dis-obj-y += $(cust)
 
 cust += led
 led-obj-y += bootloader.o main.o

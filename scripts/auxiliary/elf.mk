@@ -24,7 +24,7 @@ endif
 # Create executable from a single .c file
 # host-csingle -> Executable
 quiet_cmd_build_elf = $(ECHO_ELF)  $@
-      cmd_build_elf	= $(MKELF) $(elf_flags) -o $@ $(elf-objs)
+      cmd_build_elf	= $(MKELF) $(elf_flags) -o $@ $(elf-objs) $(elf-directs)
 $(elf): $(elf-objs) FORCE
 	$(call if_changed,build_elf)
 
