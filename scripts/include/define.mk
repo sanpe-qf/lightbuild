@@ -23,6 +23,10 @@ OBJCOPY			?= $(CROSS_COMPILE)objcopy
 OBJDUMP			?= $(CROSS_COMPILE)objdump
 
 #
+# Gcc toolchain
+DTC				?= $(BUILD_HOME)/dtc/dtc
+
+#
 # NASM toolchain
 NASM			?= nasm
 
@@ -113,6 +117,8 @@ ECHO_AR			:= \e[32mAR\e[0m
 ECHO_LD			:= \e[35mLD\e[0m
 ECHO_LDS		:= \e[35mLDS\e[0m
 
+ECHO_DTB		:= \e[36mDTB\e[0m
+
 ECHO_CUSTCPP	:= \e[33mCUSTCPP\e[0m
 ECHO_CUSTAS		:= \e[33mCUSTAS\e[0m
 ECHO_CUSTCC		:= \e[33mCUSTCC\e[0m
@@ -183,6 +189,11 @@ build_main	:= -f $(BUILD_HOME)/main/main.mk obj
 # $(Q)$(MAKE) $(build)=dir
 build_lib	:= -f $(BUILD_HOME)/main/lib.mk obj
 
+# Shorthand for $(Q)$(MAKE) -f scripts/modules/build_dtb.mk obj=
+# Usage:
+# $(Q)$(MAKE) $(build_dtb)=dir
+build_dtb	:= -f $(BUILD_HOME)/modules/dtb.mk obj
+
 # Shorthand for $(Q)$(MAKE) -f scripts/modules/build_nasm.mk obj=
 # Usage:
 # $(Q)$(MAKE) $(build_nasm)=dir
@@ -208,7 +219,13 @@ clean		:= -f $(BUILD_HOME)/clean.mk obj
 # Shorthand for $(Q)$(MAKE) -f scripts/clean.mk obj=
 # Usage:
 # $(Q)$(MAKE) $(clean)=dir
-basic		:= -f $(BUILD_HOME)/basic/fixdep.mk
+basic		:= -f $(BUILD_HOME)/fixdep.mk
+
+###
+# Shorthand for $(Q)$(MAKE) -f scripts/clean.mk obj=
+# Usage:
+# $(Q)$(MAKE) $(clean)=dir
+dtc_basic	:= -f $(BUILD_HOME)/dtc.mk
 
 ###
 # Shorthand for $(Q)$(MAKE) scripts/tools/mkmakefile
@@ -450,7 +467,7 @@ ifeq ($(KBUILD_VERBOSE),2)
 why =                                                                        \
     $(if $(filter $@, $(PHONY)),- due to target is PHONY,                    \
         $(if $(wildcard $@),                                                 \
-            $(if $(strip $(newer-prereqs)),- due to: $(newer-prereqs),             \
+            $(if $(strip $(newer-prereqs)),- due to: $(newer-prereqs),       \
                 $(if $(arg-check),                                           \
                     $(if $(cmd_$@),- due to command line change,             \
                         $(if $(filter $@, $(targets)),                       \

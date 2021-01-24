@@ -92,6 +92,20 @@ rule_main:
 	$(Q)$(MAKE) $(build_main)=$(obj)
 
 ########################################
+# dtc rule                             #
+########################################
+
+ifneq ($(dtb-y),)
+rules += rule_dtc
+endif
+
+#
+# Independent rules: assembly to bin
+rule_dtc:
+	$(Q)$(MAKE) $(dtc_basic)
+	$(Q)$(MAKE) $(build_dtb)=$(obj)
+
+########################################
 # lib rule                             #
 ########################################
 

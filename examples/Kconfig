@@ -6,6 +6,10 @@ config BUILD_CUST
     bool "build cust modules"
     default y
     
+config BUILD_DTB
+    bool "build dtb modules"
+    default y
+    
 config BUILD_HOST
     bool "build host modules"
     default y
